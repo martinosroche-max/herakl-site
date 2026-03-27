@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HERAKL — Dossier partagé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-mid:#DBEAFE;
+  --ink:#0F172A;--sec:#64748B;--muted:#94A3B8;
+  --border:#E2E8F0;--bg:#F8FAFC;--card:#FFFFFF;
+  --green:#16A34A;--green-lt:#DCFCE7;
+  --amber:#D97706;--amber-lt:#FEF3C7;
+  --red:#EF4444;--red-lt:#FEE2E2;
+  --r:12px;--max:720px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+h1,h2,.logo-t{font-family:'Sora',sans-serif;}
+
+/* Header */
+.view-nav{background:var(--ink);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-box{width:26px;height:26px;border-radius:7px;background:var(--blue);display:flex;align-items:center;justify-content:center;}
+.logo-t{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.03em;}
+.view-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.15);text-transform:uppercase;letter-spacing:.08em;}
+
+/* Hero bien */
+.view-hero{background:linear-gradient(135deg,#080F1E,#0D1F3C);padding:32px 28px;}
+.view-inner{max-width:var(--max);margin:0 auto;}
+.view-addr{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#F0F4FF;letter-spacing:-.04em;margin-bottom:6px;}
+.view-meta{font-size:13px;color:rgba(255,255,255,.45);}
+.view-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;}
+.view-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px;}
+.view-stat-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.view-stat-val{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#F0F4FF;letter-spacing:-.04em;}
+.view-stat-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;}
+
+/* Content */
+.view-content{max-width:var(--max);margin:0 auto;padding:28px;}
+.view-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px;overflow:hidden;}
+.view-section-h{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.view-section-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--ink);}
+.view-section-b{padding:16px 20px;}
+.data-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.data-row:last-child{border-bottom:none;padding-bottom:0;}
+.data-row-label{font-size:12.5px;color:var(--sec);}
+.data-row-value{font-size:13px;font-weight:600;color:var(--ink);}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:3px 8px;border-radius:100px;}
+.pill.ok{background:var(--green-lt);color:var(--green);border:1px solid #A7F3D0;}
+.pill.warn{background:var(--amber-lt);color:var(--amber);border:1px solid #FDE68A;}
+.pd{width:5px;height:5px;border-radius:50%;}
+.pill.ok .pd{background:var(--green);}
+.pill.warn .pd{background:var(--amber);}
+.access-badge-warn{padding:14px 18px;background:var(--amber-lt);border:1px solid #FDE68A;border-radius:9px;font-size:12.5px;color:var(--amber);margin-bottom:16px;line-height:1.5;}
+.score-ring-wrap{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+.ring-svg{width:70px;height:70px;flex-shrink:0;}
+.ring-info{flex:1;}
+.ring-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.04em;}
+.ring-lbl{font-size:12px;color:var(--sec);}
+.cta-section{text-align:center;padding:32px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);}
+.cta-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin-bottom:8px;}
+.cta-sub{font-size:13px;color:var(--sec);margin-bottom:20px;}
+.btn-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;}
+.footer{text-align:center;padding:24px;font-size:12px;color:var(--muted);}
+.doc-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--sec);}
+.doc-item:last-child{border-bottom:none;padding-bottom:0;}
+.doc-ico{width:24px;height:24px;border-radius:5px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tl-item{display:flex;gap:12px;padding-bottom:16px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px;}
+.tl-yr{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);width:30px;flex-shrink:0;padding-top:2px;}
+.tl-title{font-size:12.5px;font-weight:600;color:var(--ink);}
+.tl-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+@media(max-width:640px){
+  .view-stats{grid-template-columns:1fr 1fr;}
+  .view-addr{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="view-nav">
+  <div class="logo">
+    <div class="logo-box">
+      <svg width="13" height="13" viewBox="0 0 32 32" fill="none">
+        <rect x="4" y="6" width="5" height="20" rx="2" fill="#fff"/>
+        <rect x="13.5" y="6" width="5" height="9" rx="2" fill="#fff"/>
+        <rect x="13.5" y="17" width="5" height="9" rx="2" fill="rgba(255,255,255,.5)"/>
+        <rect x="23" y="6" width="5" height="20" rx="2" fill="#fff"/>
+      </svg>
+    </div>
+    <span class="logo-t">HERAKL</span>
+  </div>
+  <div class="view-badge">Dossier partagé</div>
+</nav>
+
+<!-- Hero -->
+<div class="view-hero">
+  <div class="view-inner">
+    <div class="view-addr" id="v-addr">Chargement…</div>
+    <div class="view-meta" id="v-meta"></div>
+    <div class="view-stats">
+      <div class="view-stat">
+        <div class="view-stat-lbl">Score HERAKL</div>
+        <div class="view-stat-val" id="v-score">—</div>
+        <div class="view-stat-sub" id="v-score-lbl">Analyse automatique</div>
+      </div>
+      <div class="view-stat">
+        <div class="view-stat-lbl">Valeur estimée</div>
+        <div class="view-stat-val" id="v-valeur">—</div>
+        <div class="view-stat-sub" id="v-valeur-sub">Estimation marché</div>
+      </div>
+      <div class="view-stat">
+        <div class="view-stat-lbl">DPE</div>
+        <div class="view-stat-val" id="v-dpe">—</div>
+        <div class="view-stat-sub" id="v-dpe-sub">Classe énergétique</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="view-content">
+
+  <!-- Badge accès limité si mode lecture seule -->
+  <div id="access-notice" class="access-badge-warn" style="display:none;">
+    🔒 Ce dossier est en accès lecture seule. Certaines informations peuvent être masquées.
+  </div>
+
+  <!-- Score anneau -->
+  <div class="view-section mb0" style="margin-bottom:16px;">
+    <div class="view-section-h">
+      <div class="view-section-title">Score HERAKL</div>
+      <span id="v-score-pill" class="pill warn"><div class="pd"></div>—</span>
+    </div>
+    <div class="view-section-b">
+      <div class="score-ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#E2E8F0" stroke-width="8"/>
+          <circle id="v-ring" cx="50" cy="50" r="40" fill="none" stroke="#60A5FA" stroke-width="8"
+            stroke-dasharray="251.3" stroke-dashoffset="251.3"
+            stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="ring-info">
+          <div class="ring-val" id="v-ring-val">—%</div>
+          <div class="ring-lbl" id="v-score-label">Analyse en cours…</div>
+        </div>
+      </div>
+      <p id="v-synth" style="font-size:13px;color:var(--sec);line-height:1.6;"></p>
+    </div>
+  </div>
+
+  <!-- Identité -->
+  <div class="view-section">
+    <div class="view-section-h">
+      <div class="view-section-title">Identité du bien</div>
+    </div>
+    <div class="view-section-b" id="v-identite">
+      <div style="font-size:12.5px;color:var(--muted);">Chargement…</div>
+    </div>
+  </div>
+
+  <!-- Énergie -->
+  <div class="view-section">
+    <div class="view-section-h">
+      <div class="view-section-title">Performance énergétique</div>
+      <span id="v-dpe-pill" class="pill warn"><div class="pd"></div>—</span>
+    </div>
+    <div class="view-section-b" id="v-energie">
+      <div style="font-size:12.5px;color:var(--muted);">Chargement…</div>
+    </div>
+  </div>
+
+  <!-- Documents (si accès dépôt) -->
+  <div class="view-section" id="v-docs-section" style="display:none;">
+    <div class="view-section-h">
+      <div class="view-section-title">Documents partagés</div>
+    </div>
+    <div class="view-section-b" id="v-docs">
+      <div style="font-size:12.5px;color:var(--muted);">Aucun document partagé.</div>
+    </div>
+  </div>
+
+  <!-- Historique -->
+  <div class="view-section" id="v-histo-section" style="display:none;">
+    <div class="view-section-h">
+      <div class="view-section-title">Historique du bien</div>
+    </div>
+    <div class="view-section-b" id="v-histo">
+      <div style="font-size:12.5px;color:var(--muted);">Aucun événement partagé.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-title">Vous aussi, analysez votre bien</div>
+    <p class="cta-sub">Obtenez gratuitement votre score, votre estimation et vos recommandations en moins d'une minute.</p>
+    <a class="btn-cta" href="herakl-landing.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      Analyser mon bien
+    </a>
+  </div>
+</div>
+
+<div class="footer">HERAKL · Dossier numérique du bien immobilier · Accès sécurisé et temporaire</div>
+
+<script>
+
+/* ── Charger le bien depuis localStorage via le token ── */
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var token  = params.get('token');
+  var bienId = params.get('bien');
+
+  /* Chercher le lien dans userBiens */
+  function HKget(k){ try{ var r=localStorage.getItem(k); return r?JSON.parse(r):null; }catch(e){return null;} }
+  function fmtK(n){ return n?Math.round(n/1000)+'k €':'—'; }
+
+  var userBiens = HKget('herakl_user_biens') || [];
+  var b = null;
+  var linkData = null;
+
+/* ── MOD : support mode démo depuis landing ── */
+var isDemo = params.get('demo') === '1';
+if (isDemo && !b) {
+  /* Données démo réalistes */
+  b = {
+    id: 'demo_bien',
+    adresse: { full: '12 rue des Acacias, Lyon 69006', street: '12 rue des Acacias', city: 'Lyon', postalCode: '69006' },
+    bien: { type: 'appartement', surface: 68, pieces: '3', annee: '1985' },
+    contexte: { prixM2: 4800, valeurBasse: 294000, valeurHaute: 340000, region: 'Auvergne-RA' },
+    energie: { dpe: 'C', dpeEstime: true, scoreEnergy: 72 },
+    analyse: { scoreGlobal: 74, scoreStructure: 78, scoreRisque: 80,
+      synthese: 'Appartement en bon état général, performance énergétique correcte. Potentiel de valorisation par rénovation légère.',
+      priorites: [
+        { urgence: 'high', titre: 'Isolation des combles', description: 'Améliore le DPE et réduit les charges', gain: '+12k€ potentiel' },
+        { urgence: 'low', titre: 'Mise à jour tableau électrique', description: 'Conformité et sécurité renforcée', gain: '+5k€ potentiel' }
+      ]
+    },
+    marche: { prixM2: 4800, tension: 'tendu' },
+    risques: { inondation: false, sismique: 'faible' },
+    documents: [{ id: 'd1', nom: 'DPE_officiel.pdf', categorie: 'DPE' }],
+    historique: [
+      { id: 'h1', type: 'travaux', titre: 'Rénovation salle de bain', date: '2021-06-01', montant: 8500, createdAt: '2021-06-01' }
+    ],
+    completude: { score: 62, filled: 6, total: 10 },
+    urbanisme: { zonePLU: 'UC', extensionPossible: false },
+    sharedLinks: []
+  };
+  /* Badge démo */
+  var demoBadge = document.createElement('div');
+  demoBadge.style.cssText = 'background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:8px 14px;text-align:center;font-size:12px;color:#92400E;margin-bottom:16px;';
+  demoBadge.textContent = '🔍 Mode démonstration — données fictives à titre d\'exemple';
+  document.querySelector('.v-container') && document.querySelector('.v-container').prepend(demoBadge);
+}
+
+
+
+  /* Trouver le bien correspondant */
+  userBiens.forEach(function(bien) {
+    if (bien.id === bienId) {
+      b = bien;
+      /* Trouver le lien de partage correspondant */
+      if (bien.sharedLinks) {
+        bien.sharedLinks.forEach(function(l) {
+          if (l.id === token) linkData = l;
+        });
+      }
+    }
+  });
+
+  if (!b) {
+    /* Essayer le bien courant */
+    var cur = HKget('herakl_bien');
+    if (cur) b = cur;
+  }
+
+  if (!b) {
+    document.getElementById('v-addr').textContent = 'Lien expiré ou invalide';
+    document.getElementById('v-meta').textContent = 'Ce dossier n\'est plus accessible.';
+    return;
+  }
+
+  /* Vérifier expiration */
+  if (linkData && linkData.expiresAt && new Date(linkData.expiresAt) < new Date()) {
+    document.getElementById('access-notice').style.display='block';
+    document.getElementById('access-notice').innerHTML = '⏱ Ce lien de partage a expiré.';
+    return;
+  }
+
+  /* Remplir le hero */
+  var ad  = b.adresse || {};
+  var bi  = b.bien    || {};
+  var ed  = b.energie || {};
+  var ctx = b.contexte || {};
+  var an  = b.analyse || {};
+
+  document.getElementById('v-addr').textContent = ad.full || ad.street || 'Adresse non renseignée';
+  document.getElementById('v-meta').textContent = [
+    {maison:'Maison',appartement:'Appartement',immeuble:'Immeuble',terrain:'Terrain'}[bi.type]||'Bien',
+    bi.surface ? bi.surface+' m²' : null,
+    ad.city || null
+  ].filter(Boolean).join(' · ');
+
+  var score = an.scoreGlobal || 0;
+  document.getElementById('v-score').textContent = score+'%';
+  document.getElementById('v-score-lbl').textContent = score>=80?'Excellent':score>=65?'Bien valorisé':score>=50?'Bien moyen':'À améliorer';
+  document.getElementById('v-valeur').textContent = ctx.valeurBasse&&ctx.valeurHaute ? fmtK(Math.round((ctx.valeurBasse+ctx.valeurHaute)/2)) : '—';
+  document.getElementById('v-valeur-sub').textContent = ctx.prixM2 ? ctx.prixM2.toLocaleString('fr-FR')+' €/m²' : 'Estimation';
+  document.getElementById('v-dpe').textContent = ed.dpe || '—';
+  document.getElementById('v-dpe-sub').textContent = ed.dpeEstime ? 'Estimé' : 'Vérifié';
+
+  /* Score ring */
+  var ring = document.getElementById('v-ring');
+  if (ring) {
+    setTimeout(function() {
+      ring.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1)';
+      ring.style.strokeDashoffset = 251.3 - (score/100)*251.3;
+      ring.setAttribute('stroke', score>=75?'#4ADE80':score>=55?'#60A5FA':'#FCD34D');
+    }, 200);
+  }
+  document.getElementById('v-ring-val').textContent = score+'%';
+  document.getElementById('v-score-label').textContent = score>=80?'Excellent':score>=65?'Bien valorisé':score>=50?'Bien moyen':'À améliorer';
+  if (an.synthese) document.getElementById('v-synth').textContent = an.synthese;
+
+  /* Score pill */
+  var sPill = document.getElementById('v-score-pill');
+  if (sPill) {
+    sPill.className = 'pill ' + (score>=65?'ok':score>=50?'warn':'ko');
+    sPill.innerHTML = '<div class="pd"></div>' + (score>=65?'Bon bien':score>=50?'Bien moyen':'À améliorer');
+  }
+
+  /* Identité */
+  var ident = document.getElementById('v-identite');
+  if (ident) {
+    ident.innerHTML = [
+      {l:'Type',v:({maison:'Maison',appartement:'Appartement',immeuble:'Immeuble',terrain:'Terrain'}[bi.type]||'—')},
+      {l:'Surface',v:bi.surface?bi.surface+' m²':'—'},
+      {l:'Zone PLU',v:(b.urbanisme&&b.urbanisme.zonePLU)||'—'},
+      {l:'Score structurel',v:an.scoreStructure?an.scoreStructure+'%':'—'},
+    ].map(function(r){
+      return '<div class="data-row"><span class="data-row-label">'+r.l+'</span><span class="data-row-value">'+r.v+'</span></div>';
+    }).join('');
+  }
+
+  /* Énergie */
+  var enEl = document.getElementById('v-energie');
+  if (enEl) {
+    var DPE_COLORS={A:'#16A34A',B:'#4ADE80',C:'#86EFAC',D:'#FCD34D',E:'#F97316',F:'#EF4444',G:'#7F1D1D'};
+    enEl.innerHTML = '<div class="data-row"><span class="data-row-label">Classe DPE</span>'
+      +'<span class="data-row-value" style="color:'+(DPE_COLORS[ed.dpe]||'#F97316')+';">'+( ed.dpe||'—')+(ed.dpeEstime?' (estimé)':' (vérifié)')+'</span></div>'
+      +'<div class="data-row"><span class="data-row-label">Score énergie</span><span class="data-row-value">'+(ed.scoreEnergy||'—')+'%</span></div>';
+  }
+
+  /* DPE pill */
+  var dpeP = document.getElementById('v-dpe-pill');
+  if (dpeP) {
+    var ok = ['A','B','C'].indexOf(ed.dpe)>=0;
+    dpeP.className = 'pill '+(ok?'ok':'warn');
+    dpeP.innerHTML = '<div class="pd"></div>'+( ok?'Bonne performance':'À améliorer');
+  }
+
+  /* Accès dépôt : afficher docs + historique */
+  var hasDepot = !linkData || linkData.role === 'depot';
+  if (hasDepot || true) { /* toujours montrer en mode local */
+    /* Documents */
+    var docs = b.documents || [];
+    if (docs.length > 0) {
+      document.getElementById('v-docs-section').style.display = 'block';
+      document.getElementById('v-docs').innerHTML = docs.map(function(d) {
+        return '<div class="doc-item">'
+          +'<div class="doc-ico"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>'
+          +'<span>'+d.nom+'</span>'
+          +'<span style="font-size:10.5px;color:var(--muted);margin-left:auto;">'+d.categorie+'</span>'
+          +'</div>';
+      }).join('');
+    }
+    /* Historique */
+    var hist = b.historique || [];
+    if (hist.length > 0) {
+      document.getElementById('v-histo-section').style.display = 'block';
+      document.getElementById('v-histo').innerHTML = '<div style="display:flex;flex-direction:column;">'
+        + hist.slice().reverse().map(function(e) {
+          var yr = e.date ? e.date.slice(0,4) : new Date(e.createdAt||Date.now()).getFullYear();
+          return '<div class="tl-item"><div class="tl-dot"></div><div class="tl-yr">'+yr+'</div>'
+            +'<div><div class="tl-title">'+e.titre+'</div>'+(e.montant?'<div class="tl-sub">'+Math.round(e.montant).toLocaleString('fr-FR')+' €</div>':'')+'</div></div>';
+        }).join('')+'</div>';
+    }
+  }
+})();
+
+</script>
+</body>
+</html>

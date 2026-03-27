@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HERAKL — Analyser mon bien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;600&family=DM+Sans:wght@400;500;600&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════
+   HERAKL ONBOARDING v5
+   Phase 1 (4 étapes obligatoires) + Transition +
+   Phase 2 (7 étapes enrichissement) + Analyse + Résultat
+═══════════════════════════════════════════════════ */
+:root{
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-mid:#DBEAFE;--blue-dk:#1D4ED8;
+  --ink:#0F172A;--ink2:#1E293B;--sec:#64748B;--muted:#94A3B8;
+  --border:#E2E8F0;--bg:#F8FAFC;--card:#fff;
+  --green:#16A34A;--green-lt:#DCFCE7;
+  --amber:#D97706;--amber-lt:#FEF3C7;
+  --red:#EF4444;--red-lt:#FEE2E2;
+  --purple:#7C3AED;--purple-lt:#F5F3FF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;}
+
+/* ═══ LAYOUT ═══ */
+.layout{display:grid;grid-template-columns:38% 62%;height:100vh;}
+
+/* ═══ LEFT PANEL ═══ */
+.left{
+  background:linear-gradient(170deg,#080F1E 0%,#0C1A30 55%,#0A1628 100%);
+  display:flex;flex-direction:column;padding:36px 40px;position:relative;overflow:hidden;
+}
+.left::before{content:'';position:absolute;top:-80px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.14) 0%,transparent 65%);pointer-events:none;}
+.left::after{content:'';position:absolute;bottom:-60px;left:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,.07) 0%,transparent 65%);pointer-events:none;}
+
+.left-logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:32px;position:relative;z-index:1;}
+.left-logo-box{width:28px;height:28px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;}
+.left-logo-text{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;letter-spacing:-.025em;}
+
+.left-body{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;}
+.left-eyebrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:#4B7DC8;text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;}
+.left-title{font-family:'Sora',sans-serif;font-size:clamp(20px,2.2vw,26px);font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.1;margin-bottom:12px;}
+.left-title em{font-style:normal;color:#3B82F6;}
+.left-desc{font-size:12.5px;color:#7A9BC0;line-height:1.7;margin-bottom:28px;max-width:270px;}
+
+/* Stepper gauche — Phase 1 */
+.stepper{display:flex;flex-direction:column;gap:0;}
+.step-row{display:flex;align-items:flex-start;gap:12px;padding-bottom:16px;position:relative;}
+.step-row:last-child{padding-bottom:0;}
+.step-row::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:2px;background:#17243A;border-radius:1px;transition:background .4s;}
+.step-row.done::before{background:rgba(22,163,74,.3);}
+.step-row:last-child::before{display:none;}
+.step-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:10px;font-weight:700;transition:all .35s cubic-bezier(.16,1,.3,1);}
+.step-dot.todo{background:#111E30;border:1.5px solid #1E3050;color:#3A5070;}
+.step-dot.active{background:var(--blue);color:#fff;box-shadow:0 0 0 5px rgba(37,99,235,.18);}
+.step-dot.done{background:#16A34A;color:#fff;}
+.step-text{padding-top:2px;}
+.step-name{font-family:'Sora',sans-serif;font-size:12.5px;font-weight:700;color:#374E6A;transition:color .3s;margin-bottom:1px;}
+.step-sub{font-size:10.5px;color:#1E3050;}
+.step-row.active .step-name{color:#fff;}
+.step-row.active .step-sub{color:#6B8EC0;}
+.step-row.done .step-name{color:#4ADE80;}
+.step-row.done .step-sub{color:rgba(74,222,128,.35);}
+
+/* Phase 2 — stepper enrichissement */
+.p2-label{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.14em;margin:16px 0 10px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);}
+.p2-steps{display:flex;flex-direction:column;gap:6px;}
+.p2-step{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:9px;transition:all .2s;}
+.p2-step.active{background:rgba(37,99,235,.18);}
+.p2-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all .3s;}
+.p2-dot.todo{background:#1E3050;}
+.p2-dot.active{background:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.2);}
+.p2-dot.done{background:var(--green);}
+.p2-name{font-size:11.5px;color:#4B6A88;transition:color .2s;}
+.p2-step.active .p2-name{color:#fff;}
+.p2-step.done .p2-name{color:#4ADE80;}
+
+.left-footer{padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:#2A3F58;position:relative;z-index:1;}
+
+/* ═══ RIGHT PANEL ═══ */
+.right{display:flex;flex-direction:column;overflow-y:auto;}
+.progress-bar{height:3px;background:var(--border);flex-shrink:0;}
+.progress-fill{height:100%;background:var(--blue);transition:width .5s cubic-bezier(.16,1,.3,1);width:0%;}
+.right-content{flex:1;display:flex;flex-direction:column;padding:44px 52px 36px;}
+
+/* Steps */
+.step-panel{display:none;flex-direction:column;height:100%;animation:stepIn .28s cubic-bezier(.16,1,.3,1) both;}
+.step-panel.active{display:flex;}
+@keyframes stepIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.step-eyebrow{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;}
+.step-title{font-family:'Sora',sans-serif;font-size:clamp(20px,2.8vw,28px);font-weight:800;color:var(--ink);letter-spacing:-.04em;line-height:1.1;margin-bottom:8px;}
+.step-sub{font-size:14px;color:var(--sec);line-height:1.55;margin-bottom:28px;max-width:440px;}
+
+/* Choices */
+.choices{display:grid;gap:9px;margin-bottom:24px;}
+.choice{display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--card);border:2px solid var(--border);border-radius:13px;cursor:pointer;transition:all .12s;user-select:none;position:relative;}
+.choice:hover{border-color:#93C5FD;background:#F0F7FF;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.07);}
+.choice.selected{border-color:var(--blue);background:var(--blue-lt);}
+.choice.selected::after{content:'';position:absolute;top:13px;right:15px;width:18px;height:18px;border-radius:50%;background:var(--blue) url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/11px no-repeat;}
+.choice-icon{width:38px;height:38px;border-radius:10px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:19px;transition:all .12s;}
+.choice.selected .choice-icon{background:var(--blue);border-color:var(--blue);}
+.choice-label{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--ink);}
+.choice-sublabel{font-size:12px;color:var(--muted);margin-top:1px;}
+
+/* Input fields */
+.field{margin-bottom:18px;}
+.field-label{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:600;color:var(--sec);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.field-input{width:100%;padding:13px 18px;border:2px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--card);outline:none;transition:border-color .15s,box-shadow .15s;}
+.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.08);}
+.field-input::placeholder{color:var(--muted);}
+
+/* Autocomplete */
+.autocomplete-wrap{position:relative;}
+.autocomplete-drop{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1.5px solid var(--border);border-radius:12px;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,.1);overflow:hidden;}
+.autocomplete-drop.show{display:block;}
+.ac-item{padding:11px 16px;cursor:pointer;font-size:13.5px;color:var(--ink);border-bottom:1px solid var(--border);transition:background .1s;}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:hover,.ac-item.active{background:var(--blue-lt);}
+.ac-item-addr{font-weight:500;}
+.ac-item-city{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* Surface */
+.surface-row{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+.surf-btn{width:42px;height:42px;border-radius:11px;border:2px solid var(--border);background:var(--card);font-size:22px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;}
+.surf-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-lt);}
+.surf-val{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-.04em;min-width:80px;text-align:center;}
+.surf-unit{font-size:14px;color:var(--sec);}
+
+/* Pièces */
+.pieces-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.piece-chip{padding:9px 18px;border-radius:100px;border:1.5px solid var(--border);background:var(--card);font-size:13px;font-weight:500;color:var(--sec);cursor:pointer;transition:all .12s;}
+.piece-chip:hover{border-color:var(--blue);color:var(--blue);}
+.piece-chip.selected{border-color:var(--blue);background:var(--blue-lt);color:var(--blue);font-weight:600;}
+
+/* Navigation */
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:22px;}
+.btn-back{display:flex;align-items:center;gap:6px;padding:11px 18px;background:transparent;color:var(--sec);border:1.5px solid var(--border);border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;transition:all .14s;text-decoration:none;}
+.btn-back:hover{border-color:var(--sec);color:var(--ink);}
+.btn-next{display:flex;align-items:center;gap:7px;padding:13px 26px;background:var(--blue);color:#fff;border:none;border-radius:11px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .14s;box-shadow:0 3px 12px rgba(37,99,235,.25);}
+.btn-next:hover:not(:disabled){background:var(--blue-dk);transform:translateY(-1px);}
+.btn-next:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;box-shadow:none;}
+.btn-next svg,.btn-back svg{width:14px;height:14px;}
+
+/* ═══ ÉCRAN TRANSITION ═══ */
+.transition-screen{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;text-align:center;padding:40px;
+}
+.transition-screen.active{display:flex;animation:stepIn .35s ease both;}
+.tr-emoji{font-size:48px;margin-bottom:20px;line-height:1;}
+.tr-title{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.04em;margin-bottom:10px;}
+.tr-sub{font-size:14px;color:var(--sec);line-height:1.6;margin-bottom:32px;max-width:380px;}
+.tr-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:28px;text-align:left;max-width:400px;width:100%;}
+.tr-card-title{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+.tr-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--sec);}
+.tr-item:last-child{border-bottom:none;padding-bottom:0;}
+.tr-item-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+.tr-btns{display:flex;flex-direction:column;gap:8px;align-items:center;width:100%;max-width:320px;}
+.btn-tr-main{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .14s;box-shadow:0 4px 16px rgba(37,99,235,.3);}
+.btn-tr-main:hover{background:var(--blue-dk);}
+.btn-tr-skip{background:none;border:none;font-size:13px;color:var(--muted);cursor:pointer;padding:8px;transition:color .12s;}
+.btn-tr-skip:hover{color:var(--sec);}
+
+/* ═══ PHASE 2 — Enrichissement ═══ */
+/* Grille éléments */
+.elem-grid{display:flex;flex-direction:column;gap:0;margin-bottom:20px;}
+.elem-row{display:grid;grid-template-columns:1fr 2fr;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.elem-row:last-child{border-bottom:none;padding-bottom:0;}
+.elem-row:first-child{padding-top:0;}
+.elem-name{font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;}
+.elem-name-ico{font-size:16px;}
+.elem-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.elem-chip{padding:6px 12px;border-radius:100px;border:1.5px solid var(--border);background:var(--card);font-size:11.5px;font-weight:500;color:var(--sec);cursor:pointer;transition:all .12s;white-space:nowrap;}
+.elem-chip:hover{border-color:var(--blue);color:var(--blue);}
+.elem-chip.selected{font-weight:600;}
+.elem-chip.selected.bon{border-color:var(--green);background:var(--green-lt);color:var(--green);}
+.elem-chip.selected.moyen{border-color:var(--amber);background:var(--amber-lt);color:var(--amber);}
+.elem-chip.selected.insuffisant{border-color:#EF4444;background:#FEE2E2;color:#EF4444;}
+.elem-chip.selected.critique{border-color:#7F1D1D;background:#FEE2E2;color:#991B1B;}
+.elem-chip.selected.nr{border-color:var(--muted);background:var(--bg);color:var(--muted);}
+
+/* Travaux module */
+.travail-entry{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-bottom:8px;position:relative;}
+.travail-entry:last-child{margin-bottom:0;}
+.travail-row{display:grid;grid-template-columns:2fr 1fr auto;gap:10px;align-items:end;}
+.travail-remove{width:28px;height:28px;border-radius:7px;background:none;border:1.5px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;margin-bottom:2px;}
+.travail-remove:hover{border-color:var(--red);color:var(--red);background:var(--red-lt);}
+.btn-add-travail{display:flex;align-items:center;gap:7px;padding:10px 18px;background:none;border:1.5px dashed var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .14s;margin-top:8px;}
+.btn-add-travail:hover{border-color:var(--blue);background:var(--blue-lt);}
+.btn-add-travail svg{width:13px;height:13px;}
+
+/* Multi-select problèmes */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.prob-chip{display:flex;align-items:center;gap:10px;padding:13px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .12s;background:var(--card);}
+.prob-chip:hover{border-color:#93C5FD;background:var(--blue-lt);}
+.prob-chip.selected{border-color:var(--amber);background:var(--amber-lt);}
+.prob-chip.selected.none{border-color:var(--green);background:var(--green-lt);}
+.prob-icon{font-size:20px;flex-shrink:0;}
+.prob-label{font-size:13px;font-weight:600;color:var(--ink);}
+
+/* Upload documents */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .14s;background:var(--bg);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-lt);}
+.upload-zone-icon{width:36px;height:36px;margin:0 auto 10px;background:var(--blue-lt);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.upload-zone-text{font-size:13px;font-weight:500;color:var(--ink);}
+.upload-zone-hint{font-size:11px;color:var(--muted);margin-top:3px;}
+.upload-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.upload-item{display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:12.5px;color:var(--sec);}
+.upload-item-ico{width:22px;height:22px;border-radius:5px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.upload-item-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.upload-item-rm{width:20px;height:20px;border-radius:4px;background:none;border:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.upload-item-rm:hover{color:var(--red);}
+
+/* Info box */
+.info-box{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--blue-lt);border:1px solid var(--blue-mid);border-radius:10px;margin-bottom:18px;font-size:12.5px;color:var(--ink2);line-height:1.5;}
+.info-box svg{flex-shrink:0;color:var(--blue);margin-top:1px;}
+.warn-box{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--amber-lt);border:1px solid #FDE68A;border-radius:10px;margin-bottom:18px;font-size:12.5px;color:var(--ink2);line-height:1.5;}
+
+/* Badge source */
+.src-badge{display:inline-flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:8px;font-weight:600;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em;margin-left:6px;}
+.src-badge.declared{background:var(--green-lt);color:var(--green);}
+.src-badge.estimated{background:var(--amber-lt);color:var(--amber);}
+
+/* ═══ ANALYSE SCREEN ═══ */
+.analyse-screen{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px;}
+.analyse-screen.active{display:flex;animation:fadeIn .3s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.analyse-spinner{width:72px;height:72px;margin:0 auto 28px;}
+.analyse-spinner svg{width:100%;height:100%;}
+.analyse-spinner-ring{stroke-dasharray:180;stroke-dashoffset:180;animation:spinnerAnim 1.8s cubic-bezier(.4,0,.2,1) infinite;transform-origin:center;}
+@keyframes spinnerAnim{0%{stroke-dashoffset:180;transform:rotate(0deg);}50%{stroke-dashoffset:40;}100%{stroke-dashoffset:180;transform:rotate(720deg);}}
+.analyse-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.04em;margin-bottom:8px;}
+.analyse-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.5;}
+.analyse-steps{display:flex;flex-direction:column;gap:8px;max-width:320px;text-align:left;}
+.analyse-step{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:13px;color:var(--sec);}
+.analyse-step.done{background:var(--green-lt);color:var(--green);}
+.analyse-step.active{background:var(--blue-lt);color:var(--blue);}
+.analyse-step.todo{background:var(--bg);border:1px solid var(--border);}
+.analyse-step-icon{width:18px;height:18px;flex-shrink:0;}
+
+/* ═══ RÉSULTAT SCREEN ═══ */
+.result-screen{display:none;flex-direction:column;height:100%;overflow-y:auto;}
+.result-screen.active{display:flex;animation:stepIn .3s ease both;}
+.result-header{padding:28px 52px 22px;border-bottom:1px solid var(--border);}
+.result-success{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.result-check{width:30px;height:30px;border-radius:50%;background:var(--green-lt);border:2px solid #A7F3D0;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.result-eyebrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.12em;}
+.result-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.04em;margin-bottom:5px;}
+.result-sub{font-size:13px;color:var(--sec);}
+.result-body{padding:22px 52px 30px;flex:1;}
+.result-score-card{background:linear-gradient(135deg,var(--ink),#162040);border-radius:14px;padding:22px 24px;display:flex;align-items:center;gap:20px;margin-bottom:18px;}
+.rs-ring{position:relative;width:78px;height:78px;flex-shrink:0;}
+.rs-ring svg{width:100%;height:100%;}
+.rs-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.rs-pct{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;letter-spacing:-.04em;}
+.rs-sub{font-size:9px;color:rgba(255,255,255,.35);}
+.rs-lbl{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.rs-val{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:5px;}
+.rs-synth{font-size:12.5px;color:rgba(255,255,255,.5);line-height:1.55;}
+.result-enrich-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.25);border-radius:100px;font-family:'DM Mono',monospace;font-size:8.5px;color:#4ADE80;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;}
+.result-prios{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.result-prio{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:11px;background:var(--card);border:1px solid var(--border);}
+.rp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.rp-dot.h{background:var(--red);}
+.rp-dot.m{background:var(--amber);}
+.rp-dot.l{background:var(--green);}
+.rp-title{font-size:13px;font-weight:600;color:var(--ink);}
+.rp-sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.rp-gain{margin-left:auto;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--green);flex-shrink:0;padding-left:10px;}
+.result-cta{display:flex;flex-direction:column;align-items:center;padding:20px 22px;border-radius:14px;background:var(--ink);text-align:center;}
+.rc-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.03em;}
+.rc-sub{font-size:12px;color:rgba(255,255,255,.38);margin-bottom:14px;}
+.btn-cta-big{display:flex;align-items:center;gap:8px;padding:13px 28px;background:var(--blue);color:#fff;border:none;border-radius:11px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .14s;box-shadow:0 4px 16px rgba(37,99,235,.4);}
+.btn-cta-big:hover{background:var(--blue-dk);transform:translateY(-1px);}
+.rc-fine{margin-top:10px;font-size:10.5px;color:rgba(255,255,255,.22);}
+
+/* Complétion dot */
+.compl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.compl-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.compl-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.compl-fill{height:100%;background:var(--green);border-radius:3px;transition:width .6s cubic-bezier(.16,1,.3,1);}
+.compl-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+
+/* select style */
+.field-select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--card);outline:none;transition:border-color .15s;cursor:pointer;}
+.field-select:focus{border-color:var(--blue);}
+
+/* number input */
+.field-num{display:flex;align-items:center;gap:12px;}
+.field-num input{width:90px;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--ink);text-align:center;outline:none;transition:border-color .15s;}
+.field-num input:focus{border-color:var(--blue);}
+.field-num-unit{font-size:14px;color:var(--sec);}
+.field-num-skip{font-size:12px;color:var(--muted);cursor:pointer;padding:4px 10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);transition:all .12s;}
+.field-num-skip:hover{border-color:var(--sec);color:var(--sec);}
+
+/* Mobile */
+@media(max-width:780px){
+  .layout{grid-template-columns:1fr;height:auto;overflow:auto;}
+  html,body{overflow:auto;}
+  .left{display:none;}
+  .right{height:auto;}
+  body{overflow-y:auto;}
+  .right-content{padding:28px 20px 24px;}
+  .result-header,.result-body{padding-left:20px;padding-right:20px;}
+  .analyse-screen{padding:24px 20px;}
+  .elem-row{grid-template-columns:1fr;gap:6px;}
+  .problem-grid{grid-template-columns:1fr;}
+  .travail-row{grid-template-columns:1fr 1fr;}
+  .travail-row .travail-remove{grid-column:1/-1;justify-self:end;}
+}
+
+/* ═══════════════════════════════════════════════
+   MOD 1 — Bloc aperçu marché temps réel
+═══════════════════════════════════════════════ */
+.market-preview-box {
+  background: linear-gradient(135deg,#EFF6FF,#DBEAFE);
+  border: 1px solid #BFDBFE; border-radius: 12px;
+  padding: 14px 18px; animation: fadeSlideIn .35s cubic-bezier(.16,1,.3,1);
+}
+.mpb-row { display:flex; align-items:center; gap:0; }
+.mpb-kpi { flex:1; text-align:center; padding: 0 12px; }
+.mpb-lbl { font-family:'DM Mono',monospace; font-size:8.5px; color:#3B82F6;
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px; }
+.mpb-val { font-family:'Sora',sans-serif; font-size:15px; font-weight:800;
+  color:#1D4ED8; letter-spacing:-.03em; }
+.mpb-sep { width:1px; height:32px; background:#BFDBFE; flex-shrink:0; }
+.mpb-hint { font-size:10px; color:#3B82F6; margin-top:10px;
+  font-family:'DM Mono',monospace; letter-spacing:.04em; opacity:.7; }
+
+@keyframes fadeSlideIn {
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
+   MOD 3 — Transition redessinée
+═══════════════════════════════════════════════ */
+.tr-preview-header { text-align:center; margin-bottom:20px; }
+.tr-emoji-small { font-size:28px; margin-bottom:8px; }
+.tr-data-preview {
+  display:flex; align-items:center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+  gap: 0;
+}
+.tdp-kpi { flex:1; text-align:center; }
+.tdp-lbl { font-family:'DM Mono',monospace; font-size:8px;
+  color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:5px; }
+.tdp-val { font-family:'Sora',sans-serif; font-size:17px; font-weight:800;
+  color:var(--ink); letter-spacing:-.04em; }
+.tdp-score { color:var(--blue); }
+.tdp-max { font-size:11px; font-weight:500; opacity:.5; }
+.tdp-sep { width:1px; height:36px; background:var(--border); flex-shrink:0; }
+.tr-enrich-hint {
+  display:flex; align-items:center; gap:8px;
+  background:var(--amber-lt); border:1px solid #FDE68A; border-radius:9px;
+  padding:10px 14px; margin-bottom:16px;
+  font-size:11.5px; color:var(--amber); line-height:1.45;
+}
+
+/* ═══════════════════════════════════════════════
+   MOD 4+5 — Phase 2 score live
+═══════════════════════════════════════════════ */
+.p2-score-live {
+  display:inline-flex; align-items:baseline; gap:5px;
+  background:var(--blue-lt); border:1px solid var(--blue-mid);
+  border-radius:100px; padding:5px 14px; margin-bottom:18px;
+}
+.psl-lbl { font-family:'DM Mono',monospace; font-size:8.5px; color:var(--blue);
+  text-transform:uppercase; letter-spacing:.1em; }
+.psl-val { font-family:'Sora',sans-serif; font-size:17px; font-weight:800;
+  color:var(--ink); letter-spacing:-.04em; transition:all .3s; }
+.psl-max { font-size:11px; color:var(--muted); }
+
+/* MOD 6 — Réassurance sous CTA résultat */
+.result-reassurance {
+  text-align:center; font-family:'DM Mono',monospace;
+  font-size:9px; color:var(--muted); margin-top:10px; letter-spacing:.06em;
+}
+
+/* MOD 2 — Séparateur dans le panel fusionné */
+.panel-section-sep {
+  height:1px; background:var(--border);
+  margin: 20px 0 18px;
+}
+
+/* Gauche phase 2 : 3 étapes */
+.p2-step-labels {
+  display:flex; flex-direction:column; gap:4px; margin-top:8px;
+}
+
+
+/* ═══ Panel fusionné surface+objectif ═══ */
+.panel-section-sep {
+  height: 1px; background: var(--border); margin: 22px 0 18px;
+}
+/* Objectif dans panel-3 : réduire la hauteur des cards */
+#panel-3 .choice {
+  padding: 11px 14px;
+}
+#panel-3 .choice-sublabel {
+  font-size: 10px;
+}
+/* Rendre le bouton btn-3 plus visible quand activé */
+#btn-3:not(:disabled) {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+#btn-3:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+/* p2-panel-5 : points à noter = grid plus lisible */
+#p2-panel-5 .problem-grid {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+/* Score live : centré et visible */
+.p2-score-live {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: flex-start;
+}
+/* Transition : highlight la valeur estimée */
+.tdp-val {
+  transition: color .3s;
+}
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ════════════════════════
+       LEFT PANEL
+  ════════════════════════ -->
+  <div class="left">
+    <a class="left-logo" href="herakl-landing.html">
+      <div class="left-logo-box">
+        <svg width="13" height="13" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="6" width="5" height="20" rx="2" fill="#3B82F6"/>
+          <rect x="13.5" y="6" width="5" height="9" rx="2" fill="#3B82F6"/>
+          <rect x="13.5" y="17" width="5" height="9" rx="2" fill="rgba(147,197,253,.6)"/>
+          <rect x="23" y="6" width="5" height="20" rx="2" fill="#3B82F6"/>
+        </svg>
+      </div>
+      <span class="left-logo-text">HERAKL</span>
+    </a>
+
+    <div class="left-body">
+      <!-- Phase 1 -->
+      <div id="left-phase1">
+        <div class="left-eyebrow">Phase 1 — Identification</div>
+        <h2 class="left-title">Votre bien.<br>En <em>2 minutes.</em></h2>
+        <p class="left-desc">3 questions pour lancer l’analyse de votre bien.</p>
+        <div class="stepper" id="left-stepper">
+          <div class="step-row active" id="lr-1">
+            <div class="step-dot active" id="ld-1">1</div>
+            <div class="step-text">
+              <div class="step-name">Type de bien</div>
+              <div class="step-sub">Maison, appart…</div>
+            </div>
+          </div>
+          <div class="step-row" id="lr-2">
+            <div class="step-dot todo" id="ld-2">2</div>
+            <div class="step-text">
+              <div class="step-name">Adresse</div>
+              <div class="step-sub">Données marché en direct</div>
+            </div>
+          </div>
+          <div class="step-row" id="lr-3">
+            <div class="step-dot todo" id="ld-3">3</div>
+            <div class="step-text">
+              <div class="step-name">Détail &amp; objectif</div>
+              <div class="step-sub">Surface, pièces, objectif</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div id="left-phase2" style="display:none;">
+        <div class="left-eyebrow">Phase 2 — Enrichissement</div>
+        <h2 class="left-title">Mieux connaître<br>votre <em>bien.</em></h2>
+        <p class="left-desc">Chaque réponse améliore la précision de l'analyse.</p>
+        <div class="p2-label">Étapes</div>
+        <div class="p2-steps" id="p2-stepper">
+          <div class="p2-step active" id="p2lr-1">
+            <div class="p2-dot active" id="p2ld-1"></div>
+            <div class="p2-name">Structure</div>
+          </div>
+          <div class="p2-step" id="p2lr-2">
+            <div class="p2-dot todo" id="p2ld-2"></div>
+            <div class="p2-name">État global</div>
+          </div>
+          <div class="p2-step" id="p2lr-3">
+            <div class="p2-dot todo" id="p2ld-3"></div>
+            <div class="p2-name">Éléments</div>
+          </div>
+          
+          <div class="p2-step" id="p2lr-5">
+            <div class="p2-dot todo" id="p2ld-5"></div>
+            <div class="p2-name">Problèmes</div>
+          </div>
+          <div class="p2-step" id="p2lr-6">
+            <div class="p2-dot todo" id="p2ld-6"></div>
+            <div class="p2-name">Énergie</div>
+          </div>
+          <div class="p2-step" id="p2lr-7">
+            <div class="p2-dot todo" id="p2ld-7"></div>
+            <div class="p2-name">Documents</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase analyse/résultat -->
+      <div id="left-phase3" style="display:none;">
+        <div class="left-eyebrow">Analyse en cours</div>
+        <h2 class="left-title">On analyse<br>votre <em>bien.</em></h2>
+        <p class="left-desc">Croisement des données marché, PLU, énergie et structure.</p>
+      </div>
+    </div>
+
+    <div class="left-footer">Gratuit · Sans inscription · Permanent</div>
+  </div>
+
+  <!-- ════════════════════════
+       RIGHT PANEL
+  ════════════════════════ -->
+  <div class="right">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         PHASE 1 — Étape 1 : Type
+    ═══════════════════════════════ -->
+    <div class="right-content step-panel active" id="panel-1">
+      <div class="step-eyebrow">Analyse en 90 secondes · Gratuit</div>
+      <h1 class="step-title">Quel est votre bien ?</h1>
+      <p class="step-sub">Obtenez la valeur estimée, le score et les recommandations pour votre bien.</p>
+
+      <div class="choices" style="grid-template-columns:1fr 1fr;" id="type-choices">
+        <div class="choice" data-val="maison">
+          <div class="choice-icon">🏠</div>
+          <div>
+            <div class="choice-label">Maison</div>
+            <div class="choice-sublabel">Individuelle ou jumelée</div>
+          </div>
+        </div>
+        <div class="choice" data-val="appartement">
+          <div class="choice-icon">🏢</div>
+          <div>
+            <div class="choice-label">Appartement</div>
+            <div class="choice-sublabel">En copropriété</div>
+          </div>
+        </div>
+        <div class="choice" data-val="immeuble">
+          <div class="choice-icon">🏗</div>
+          <div>
+            <div class="choice-label">Immeuble</div>
+            <div class="choice-sublabel">Bâtiment complet</div>
+          </div>
+        </div>
+        <div class="choice" data-val="terrain">
+          <div class="choice-icon">🌿</div>
+          <div>
+            <div class="choice-label">Terrain</div>
+            <div class="choice-sublabel">Nu ou constructible</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <a href="herakl-landing.html" class="btn-back" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </a>
+        <button class="btn-next" id="btn-1" disabled>
+          Continuer
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ Étape 2 : Adresse ═══ -->
+    <div class="right-content step-panel" id="panel-2">
+      <div class="step-eyebrow">Étape 2 sur 3</div>
+      <h1 class="step-title">Où se situe votre bien ?</h1>
+      <p class="step-sub">Votre adresse débloque les données de marché locales en temps réel.</p>
+
+      <div class="field">
+        <div class="field-label">Adresse complète</div>
+        <div class="autocomplete-wrap">
+          <input class="field-input" id="addr-input" type="text"
+            placeholder="Ex : 15 rue des Lilas, Lyon 69003"
+            autocomplete="off"/>
+          <div class="autocomplete-drop" id="ac-drop"></div>
+        </div>
+      </div>
+
+      <!-- MOD 1 : Aperçu marché temps réel -->
+      <div id="addr-market-preview" style="display:none;margin-bottom:16px;">
+        <div class="market-preview-box">
+          <div class="mpb-row">
+            <div class="mpb-kpi">
+              <div class="mpb-lbl">Prix marché</div>
+              <div class="mpb-val" id="mpb-prix">—</div>
+            </div>
+            <div class="mpb-sep"></div>
+            <div class="mpb-kpi">
+              <div class="mpb-lbl">Marché</div>
+              <div class="mpb-val" id="mpb-tension">—</div>
+            </div>
+            <div class="mpb-sep"></div>
+            <div class="mpb-kpi">
+              <div class="mpb-lbl">Région</div>
+              <div class="mpb-val" id="mpb-region">—</div>
+            </div>
+          </div>
+          <div class="mpb-hint">📍 Données en temps réel — affinez en entrant l'adresse complète</div>
+        </div>
+      </div>
+
+      <div id="addr-confirmed" style="display:none;margin-bottom:16px;">
+        <div class="info-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="addr-confirmed-text">Adresse confirmée</span>
+          <span class="src-badge declared">API BAN</span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </button>
+        <button class="btn-next" id="btn-2" disabled>
+          Continuer
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ Étape 3 : Infos ═══ -->
+    <!-- MOD 2 : Panel-3 fusionné surface + objectif -->
+    <div class="right-content step-panel" id="panel-3">
+      <div class="step-eyebrow">Étape 3 sur 3</div>
+      <h1 class="step-title">Votre bien en détail</h1>
+      <p class="step-sub">Surface, pièces et objectif pour personnaliser votre analyse.</p>
+
+      <div class="field-label">Surface habitable</div>
+      <div class="surface-row" style="margin-bottom:20px;">
+        <button class="surf-btn" onclick="dSurf(-5)">−</button>
+        <div>
+          <div class="surf-val" id="surf-val">80</div>
+        </div>
+        <button class="surf-btn" onclick="dSurf(+5)">+</button>
+        <span class="surf-unit">m²</span>
+      </div>
+
+      <div class="field-label">Nombre de pièces</div>
+      <div class="pieces-row" id="pieces-row" style="margin-bottom:24px;">
+        <div class="piece-chip" data-val="1">1</div>
+        <div class="piece-chip" data-val="2">2</div>
+        <div class="piece-chip" data-val="3">3</div>
+        <div class="piece-chip" data-val="4">4</div>
+        <div class="piece-chip" data-val="5">5</div>
+        <div class="piece-chip" data-val="6+">6+</div>
+      </div>
+
+      <div class="panel-section-sep"></div>
+      <!-- MOD 7 : Objectif après données surface -->
+      <div class="field-label" style="margin-bottom:10px;">Quel est votre objectif ?</div>
+      <div id="obj-choices" class="choices" style="margin-bottom:0;">
+        <div class="choice" data-val="comprendre">
+          <div class="choice-icon">🧠</div>
+          <div>
+            <div class="choice-label">Comprendre mon bien</div>
+            <div class="choice-sublabel">Valeur, état, potentiel</div>
+          </div>
+        </div>
+        <div class="choice" data-val="ameliorer">
+          <div class="choice-icon">⚡</div>
+          <div>
+            <div class="choice-label">Améliorer mon bien</div>
+            <div class="choice-sublabel">Optimiser, rénover</div>
+          </div>
+        </div>
+        <div class="choice" data-val="investir">
+          <div class="choice-icon">📈</div>
+          <div>
+            <div class="choice-label">Investir</div>
+            <div class="choice-sublabel">Rentabilité, patrimoine</div>
+          </div>
+        </div>
+        <div class="choice" data-val="vendre">
+          <div class="choice-icon">🤝</div>
+          <div>
+            <div class="choice-label">Préparer une vente</div>
+            <div class="choice-sublabel">Valoriser, transmettre</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(2)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </button>
+        <button class="btn-next" id="btn-3" disabled onclick="showTransition()">
+          Analyser mon bien
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         ÉCRAN TRANSITION
+    ═══════════════════════════════ -->
+    <div class="right-content transition-screen" id="transition-screen">
+      <!-- MOD 3 : Résultat partiel + suggestion enrichissement -->
+      <div class="tr-preview-header">
+        <div class="tr-emoji-small">📊</div>
+        <div class="tr-title">Voici ce qu'on sait déjà de votre bien</div>
+        <div class="tr-sub">3 questions supplémentaires affineront l'analyse et le score.</div>
+      </div>
+
+      <!-- Données marché pré-calculées -->
+      <div class="tr-data-preview">
+        <div class="tdp-kpi">
+          <div class="tdp-lbl">Valeur estimée</div>
+          <div class="tdp-val" id="tr-valeur">—</div>
+        </div>
+        <div class="tdp-sep"></div>
+        <div class="tdp-kpi">
+          <div class="tdp-lbl">Prix marché</div>
+          <div class="tdp-val" id="tr-prix">—</div>
+        </div>
+        <div class="tdp-sep"></div>
+        <div class="tdp-kpi">
+          <div class="tdp-lbl">Score préliminaire</div>
+          <div class="tdp-val tdp-score" id="tr-score">—<span class="tdp-max">/100</span></div>
+        </div>
+      </div>
+
+      <div class="tr-enrich-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>3 questions pour un score plus précis et des recommandations personnalisées</span>
+      </div>
+
+      <div class="tr-btns">
+        <button class="btn-tr-main" onclick="startPhase2()">
+          Affiner l'analyse — 3 questions
+          <span style="font-family:'DM Mono',monospace;font-size:10px;opacity:.7;display:block;margin-top:2px;">+2 min · score plus précis</span>
+        </button>
+        <button class="btn-tr-skip" onclick="skipToAnalyse()">Voir le résultat approximatif <span style="opacity:.6;font-size:11px;">— score moins précis</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         PHASE 2 — 2.1 : Structure
+    ═══════════════════════════════ -->
+    <!-- MOD 4 : P2-1 fusionné (année + état) -->
+    <div class="right-content step-panel" id="p2-panel-1">
+      <div class="step-eyebrow">Enrichissement · 1/3</div>
+      <h1 class="step-title">Structure et état du bien</h1>
+      <p class="step-sub">Ces données affinent l'analyse structurelle et le score.</p>
+
+      <!-- Widget score live -->
+      <div class="p2-score-live" id="p2-score-live">
+        <span class="psl-lbl">Score estimé</span>
+        <span class="psl-val" id="psl-val">—</span>
+        <span class="psl-max">/100</span>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Année de construction <span style="color:var(--muted);font-size:9px;">(approx.)</span></div>
+        <div class="field-num">
+          <input type="number" id="p2-annee" placeholder="1975" min="1800" max="2025" style="width:110px;" oninput="updateLiveScore()"/>
+          <span class="field-num-unit">ou</span>
+          <button class="field-num-skip" onclick="skipAnnee()">À voir avec l’agence</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:20px;">
+        <div class="field-label">État général du bien</div>
+        <div class="choices" id="etat-choices">
+          <div class="choice" data-val="bon">
+            <div class="choice-icon">✅</div>
+            <div>
+              <div class="choice-label">Bon état</div>
+              <div class="choice-sublabel">Entretenu, pas de travaux majeurs</div>
+            </div>
+          </div>
+          <div class="choice" data-val="rafraichir">
+            <div class="choice-icon">🔨</div>
+            <div>
+              <div class="choice-label">À rafraîchir</div>
+              <div class="choice-sublabel">Peintures, sols, petits travaux</div>
+            </div>
+          </div>
+          <div class="choice" data-val="renover">
+            <div class="choice-icon">🏗</div>
+            <div>
+              <div class="choice-label">À rénover</div>
+              <div class="choice-sublabel">Travaux importants nécessaires</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="backToTransition()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </button>
+        <button class="btn-next" id="btn-p2-1" onclick="goP2(2)">
+          Continuer
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ 2.2 : État global ═══ -->
+    
+
+    <!-- ═══ 2.3 : Éléments ═══ -->
+    
+
+    <!-- ═══ 2.4 : Travaux réalisés ═══ -->
+    
+
+    <!-- ═══ 2.5 : Problèmes connus ═══ -->
+    <div class="right-content step-panel" id="p2-panel-5">
+      <div class="step-eyebrow">Enrichissement · 3/3  <span style="opacity:.4;font-size:9px;">Énergie</span></div>
+      <h1 class="step-title">Points à noter</h1>
+      <p class="step-sub">Ces informations permettent d'affiner l'analyse et le potentiel de valorisation.</p>
+
+      <div class="problem-grid" id="problems-grid">
+        <div class="prob-chip" data-val="humidite"><div class="prob-icon">💧</div><div class="prob-label">Humidité</div></div>
+        <div class="prob-chip" data-val="fissures"><div class="prob-icon">🔩</div><div class="prob-label">Fissures</div></div>
+        <div class="prob-chip" data-val="toiture"><div class="prob-icon">🏠</div><div class="prob-label">Toiture</div></div>
+        <div class="prob-chip" data-val="electricite"><div class="prob-icon">⚡</div><div class="prob-label">Électricité</div></div>
+        <div class="prob-chip" data-val="isolation"><div class="prob-icon">❄️</div><div class="prob-label">Isolation</div></div>
+        <div class="prob-chip none" data-val="aucun"><div class="prob-icon">✅</div><div class="prob-label">Aucun problème</div></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goP2(6)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </button>
+        <button class="btn-next" onclick="startAnalyse()">
+          Lancer l'analyse
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ 2.6 : Énergie ═══ -->
+    <div class="right-content step-panel" id="p2-panel-6">
+      <div class="step-eyebrow">Enrichissement · 2/3</div>
+      <h1 class="step-title">Énergie du bien</h1>
+      <p class="step-sub">Ces informations précisent le DPE estimé et le potentiel de valorisation énergétique.</p>
+
+      <div class="field">
+        <div class="field-label">Type de chauffage principal</div>
+        <select class="field-select" id="p2-chauffage">
+          <option value="">— Sélectionner —</option>
+          <option value="gaz">Gaz naturel</option>
+          <option value="fioul">Fioul</option>
+          <option value="electrique">Électrique</option>
+          <option value="pac">Pompe à chaleur</option>
+          <option value="bois">Bois / Pellets</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Isolation perçue</div>
+        <div class="choices" id="isolation-choices" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0;">
+          <div class="choice" data-val="mauvaise" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-icon" style="width:30px;height:30px;font-size:15px;">🥶</div>
+            <div class="choice-label" style="font-size:12px;">Mauvaise</div>
+          </div>
+          <div class="choice" data-val="correcte" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-icon" style="width:30px;height:30px;font-size:15px;">😐</div>
+            <div class="choice-label" style="font-size:12px;">Correcte</div>
+          </div>
+          <div class="choice" data-val="bonne" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-icon" style="width:30px;height:30px;font-size:15px;">🌡️</div>
+            <div class="choice-label" style="font-size:12px;">Bonne</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Type de vitrage</div>
+        <div class="choices" id="vitrage-choices" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0;">
+          <div class="choice" data-val="simple" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-label" style="font-size:12px;">Simple</div>
+          </div>
+          <div class="choice" data-val="double" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-label" style="font-size:12px;">Double</div>
+          </div>
+          <div class="choice" data-val="triple" style="flex-direction:column;text-align:center;gap:6px;padding:12px 10px;">
+            <div class="choice-label" style="font-size:12px;">Triple</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goP2(1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour
+        </button>
+        <button class="btn-next" onclick="goP2(5)">
+          Continuer
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ 2.7 : Documents ═══ -->
+    
+
+    <!-- ═══════════════════════════════
+         ANALYSE SCREEN
+    ═══════════════════════════════ -->
+    <div class="right-content analyse-screen" id="analyse-screen">
+      <div class="analyse-spinner">
+        <svg viewBox="0 0 72 72" fill="none">
+          <circle cx="36" cy="36" r="30" stroke="var(--border)" stroke-width="5"/>
+          <circle class="analyse-spinner-ring" cx="36" cy="36" r="30" stroke="var(--blue)" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="analyse-title">Analyse de votre bien…</div>
+      <div class="analyse-sub">Croisement des données marché, PLU, énergie et structure</div>
+      <div class="analyse-steps">
+        <div class="analyse-step todo" id="as-1">
+          <div class="analyse-step-icon">📍</div>Localisation et données PLU
+        </div>
+        <div class="analyse-step todo" id="as-2">
+          <div class="analyse-step-icon">⚡</div>Analyse énergétique
+        </div>
+        <div class="analyse-step todo" id="as-3">
+          <div class="analyse-step-icon">📊</div>Calcul du score et potentiel
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         RÉSULTAT SCREEN
+    ═══════════════════════════════ -->
+    <div class="result-screen" id="result-screen">
+      <div class="result-header">
+        <div class="result-success">
+          <div class="result-check">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="result-eyebrow">Analyse de votre bien terminée</div>
+        </div>
+        <div class="result-title" id="result-title">—</div>
+        <div class="result-sub" id="result-addr">—</div>
+        <div id="result-enrich-badge" style="display:none;">
+          <div class="result-enrich-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Données enrichies · Analyse approfondie
+          </div>
+        </div>
+      </div>
+
+      <div class="result-body">
+        <!-- Score ring -->
+        <div class="result-score-card">
+          <div class="rs-ring">
+            <svg viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="33" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/>
+              <circle id="rs-ring" cx="40" cy="40" r="33" fill="none" stroke="#60A5FA" stroke-width="6"
+                stroke-dasharray="207.3" stroke-dashoffset="207.3"
+                stroke-linecap="round" transform="rotate(-90 40 40)"/>
+            </svg>
+            <div class="rs-num">
+              <div class="rs-pct" id="rs-pct">0%</div>
+              <div class="rs-sub">/100</div>
+            </div>
+          </div>
+          <div class="rs-info">
+            <div class="rs-lbl">Score HERAKL</div>
+            <div class="rs-val" id="rs-val">—</div>
+            <div class="rs-synth" id="rs-synth">—</div>
+            <!-- Complétion -->
+            <div id="rs-compl" style="margin-top:10px;display:none;">
+              <div class="compl-bar">
+                <div class="compl-track"><div class="compl-fill" id="rs-compl-fill" style="width:0%;"></div></div>
+                <span class="compl-lbl" id="rs-compl-lbl">—% du dossier rempli</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIs rapides -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:12px 14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">Valeur estimée</div>
+            <div style="font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.03em;" id="rs-valeur">—</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:12px 14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">DPE</div>
+            <div style="font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.03em;" id="rs-dpe">—</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:12px 14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">Marché</div>
+            <div style="font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.03em;" id="rs-marche">—</div>
+          </div>
+        </div>
+
+        <!-- Priorités -->
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Priorités identifiées</div>
+        <div class="result-prios" id="result-prios">
+          <div class="result-prio">
+            <div class="rp-dot m"></div>
+            <div><div class="rp-title">Chargement…</div></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="result-ctas">
+          <button class="btn-cta-big" onclick="goToDashboard()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v13a2 2 0 0 1-2 2z"/></svg>
+            Sauvegarder mon analyse
+          </button>
+          <div style="text-align:center;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:10px;letter-spacing:.06em;">GRATUIT · SANS CB · 30 SECONDES</div>
+        </div>
+      </div><!-- /result-body -->
+    </div><!-- /result-screen -->
+
+<script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+console.log('[HERAKL] onboarding v5 chargé ✓');
+
+/* ═══════════════════════════════════════════════════════
+   UTILITAIRES
+═══════════════════════════════════════════════════════ */
+var HK = {
+  get: function(k){ try{ var r=localStorage.getItem(k); return r?JSON.parse(r):null; }catch(e){return null;} },
+  set: function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+  del: function(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+
+var _marketData = null; /* MOD 1+3 */
+
+function uid(p){ return (p||'hk')+'_'+Math.random().toString(36).slice(2,10); }
+function fmtK(n){ return n ? Math.round(n/1000)+'k \u20ac' : '\u2014'; }
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ═══════════════════════════════════════════════════════
+   BASE VILLES [SIMULATION] — TODO: remplacer par API DVF
+═══════════════════════════════════════════════════════ */
+var VILLES_DB = {
+  paris:       { prixM2:10500, lat:48.8566, lng:2.3522,  region:'Ile-de-France',  zone:'UA', dep:'75' },
+  lyon:        { prixM2:4800,  lat:45.7640, lng:4.8357,  region:'Auvergne-RA',    zone:'UC', dep:'69' },
+  marseille:   { prixM2:3400,  lat:43.2965, lng:5.3698,  region:'PACA',           zone:'UA', dep:'13' },
+  bordeaux:    { prixM2:5200,  lat:44.8378, lng:-0.5792, region:'Nouvelle-Aq.',   zone:'UB', dep:'33' },
+  toulouse:    { prixM2:3800,  lat:43.6047, lng:1.4442,  region:'Occitanie',      zone:'UC', dep:'31' },
+  nice:        { prixM2:5600,  lat:43.7102, lng:7.2620,  region:'PACA',           zone:'UA', dep:'06' },
+  nantes:      { prixM2:4100,  lat:47.2184, lng:-1.5536, region:'Pays de la L.',  zone:'UB', dep:'44' },
+  lille:       { prixM2:3600,  lat:50.6292, lng:3.0573,  region:'Hauts-de-Fr.',   zone:'UA', dep:'59' },
+  strasbourg:  { prixM2:3900,  lat:48.5734, lng:7.7521,  region:'Grand Est',      zone:'UB', dep:'67' },
+  rennes:      { prixM2:4200,  lat:48.1147, lng:-1.6794, region:'Bretagne',       zone:'UC', dep:'35' },
+  montpellier: { prixM2:3700,  lat:43.6110, lng:3.8767,  region:'Occitanie',      zone:'UB', dep:'34' },
+  grenoble:    { prixM2:3000,  lat:45.1885, lng:5.7245,  region:'Auvergne-RA',    zone:'UC', dep:'38' },
+  default:     { prixM2:2800,  lat:46.6034, lng:1.8883,  region:'France',         zone:'UB', dep:'xx' }
+};
+
+function _getVilleFromPostcode(cp) {
+  if (!cp) return VILLES_DB.default;
+  var dep = cp.slice(0,2);
+  var m = {'75':'paris','69':'lyon','13':'marseille','33':'bordeaux','31':'toulouse',
+           '59':'lille','44':'nantes','06':'nice','67':'strasbourg','35':'rennes',
+           '34':'montpellier','38':'grenoble'};
+  if (m[dep]) return VILLES_DB[m[dep]];
+  for (var k in VILLES_DB) {
+    if (k!=='default' && cp.toLowerCase().indexOf(k)>=0) return VILLES_DB[k];
+  }
+  return VILLES_DB.default;
+}
+
+function parseAdresse(full) {
+  var parts = (full||'').split(',').map(function(p){ return p.trim(); });
+  var street = parts[0] || full || '';
+  var rest   = parts.slice(1).join(', ');
+  var cpM = (rest.match(/\d{5}/)||[])[0] || '';
+  var city = rest.replace(/\d{5}/g,'').trim() || rest || street;
+  return { full: full||'', street: street, city: city, postalCode: cpM };
+}
+
+/* ═══════════════════════════════════════════════════════
+   ÉTAT GLOBAL
+═══════════════════════════════════════════════════════ */
+var TOTAL_STEPS_P1 = 3; /* MOD 2 */
+var _currentPhase  = 1; // 1 | 2 | 3
+var _currentStep   = 1;
+var _selectedFeature = null;
+var _enrichedData    = null;
+var _currentResult   = null;
+var _banTimer = null;
+var _banFeatures = [];
+var _acActiveIdx = -1;
+var _uploadTarget = null;
+var _uploadedFiles = { dpe:[], plans:[] };
+var _travauxCount = 0;
+var _p2Enriched  = false;
+
+/* Objet bien — données Phase 1 */
+var bien = {
+  type: '', adresse: '', surface: 80, pieces: '', objectif: '', numeroDPE: ''
+};
+
+/* Objet enrichissement — Phase 2 */
+var enrichData = {
+  annee: '', niveaux: '',
+  etatGlobal: '',
+  elements: {},        // toiture, menuiseries, isolation, electricite, chauffage, plomberie
+  travauxRealises: [], // [{type, annee, desc}]
+  problemes: [],
+  energie: { chauffage:'', isolation:'', vitrage:'' },
+  documents: []
+};
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION PHASE 1
+═══════════════════════════════════════════════════════ */
+function goTo(n) {
+  console.log('[HERAKL] goTo step=', n);
+  document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById('panel-'+n);
+  if (panel) panel.classList.add('active');
+  _currentStep = n;
+  _currentPhase = 1;
+  updateProgress(n);
+  updateStepper(n);
+  updateLeftPanel();
+  window.scrollTo(0,0);
+}
+
+function updateProgress(step) {
+  /* MOD 2+4 : Phase 1=3 steps, Phase 2=3 steps */
+  var pct;
+  if (_currentPhase === 1) {
+    pct = (step / TOTAL_STEPS_P1) * 36;
+  } else if (_currentPhase === 2) {
+    pct = 36 + (step / 3 * 50);
+  } else {
+    pct = 90;
+  }
+  var fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = Math.min(pct,100)+'%';
+}
+
+function updateStepper(step) {
+  var CHK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  for (var i=1; i<=TOTAL_STEPS_P1; i++) {
+    var row = document.getElementById('lr-'+i);
+    var dot = document.getElementById('ld-'+i);
+    if (!row || !dot) continue;
+    if (i < step) {
+      row.className = 'step-row done';
+      dot.className = 'step-dot done';
+      dot.innerHTML = CHK;
+    } else if (i === step) {
+      row.className = 'step-row active';
+      dot.className = 'step-dot active';
+      dot.innerHTML = String(i);
+    } else {
+      row.className = 'step-row';
+      dot.className = 'step-dot todo';
+      dot.innerHTML = String(i);
+    }
+  }
+}
+
+function updateLeftPanel() {
+  var p1 = document.getElementById('left-phase1');
+  var p2 = document.getElementById('left-phase2');
+  var p3 = document.getElementById('left-phase3');
+  if (_currentPhase === 1) {
+    if(p1) p1.style.display=''; if(p2) p2.style.display='none'; if(p3) p3.style.display='none';
+  } else if (_currentPhase === 2) {
+    if(p1) p1.style.display='none'; if(p2) p2.style.display=''; if(p3) p3.style.display='none';
+  } else {
+    if(p1) p1.style.display='none'; if(p2) p2.style.display='none'; if(p3) p3.style.display='';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ÉTAPE 1 — TYPE DE BIEN
+═══════════════════════════════════════════════════════ */
+function pickType(el) {
+  document.querySelectorAll('#type-choices .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  bien.type = el.getAttribute('data-val') || '';
+  var btn = document.getElementById('btn-1');
+  if (btn) btn.disabled = false;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ÉTAPE 2 — ADRESSE + BAN API
+═══════════════════════════════════════════════════════ */
+function addressInput(val) {
+  clearTimeout(_banTimer);
+  updateAddressStepState();
+  extractPostalFromInput(val);
+  if (val.length < 3) {
+    closeDropdown();
+    return;
+  }
+  _banTimer = setTimeout(function(){ callBanAPI(val); }, 280);
+}
+
+function callBanAPI(q) {
+  fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(q)+'&limit=5&type=housenumber,street')
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      _banFeatures = data.features || [];
+      if (_banFeatures.length > 0) {
+        showDropdown(_banFeatures);
+      } else {
+        buildLocalSuggestions(q);
+      }
+    })
+    .catch(function() { buildLocalSuggestions(q); });
+}
+
+function buildLocalSuggestions(q) {
+  var drop = document.getElementById('ac-drop');
+  if (!drop) return;
+  var ql = q.toLowerCase();
+  var matches = [];
+  for (var k in VILLES_DB) {
+    if (k !== 'default' && k.indexOf(ql) >= 0) {
+      matches.push({label: q+', '+k.charAt(0).toUpperCase()+k.slice(1), city: k});
+    }
+  }
+  if (matches.length === 0) {
+    drop.innerHTML = '<div class="ac-item" onclick="addressPickFree(\''+escH(q)+'\')"><div class="ac-item-addr">'+escH(q)+'</div><div class="ac-item-city">Saisie libre confirmée</div></div>';
+    drop.classList.add('show');
+    return;
+  }
+  drop.innerHTML = matches.map(function(m){
+    return '<div class="ac-item" onclick="addressPickFree(\''+escH(m.label)+'\')"><div class="ac-item-addr">'+escH(q)+'</div><div class="ac-item-city">'+escH(m.city.charAt(0).toUpperCase()+m.city.slice(1))+'</div></div>';
+  }).join('');
+  drop.classList.add('show');
+}
+
+function showDropdown(features) {
+  var drop = document.getElementById('ac-drop');
+  if (!drop) return;
+  drop.innerHTML = features.map(function(f, i){
+    var p = f.properties || {};
+    return '<div class="ac-item" onclick="addressPick('+i+')">'
+      +'<div class="ac-item-addr">'+escH(p.name||p.label||'')+'</div>'
+      +'<div class="ac-item-city">'+escH(p.postcode||'')+' '+escH(p.city||'')+'</div>'
+      +'</div>';
+  }).join('');
+  drop.classList.add('show');
+  _acActiveIdx = -1;
+}
+
+function closeDropdown() {
+  var drop = document.getElementById('ac-drop');
+  if (drop) { drop.classList.remove('show'); drop.innerHTML=''; }
+  _acActiveIdx = -1;
+}
+
+function addressPick(idx) {
+  var f = _banFeatures[idx];
+  if (!f) return;
+  var p = f.properties || {};
+  var g = f.geometry && f.geometry.coordinates;
+  _selectedFeature = f;
+  _enrichedData = {
+    lat: g ? g[1] : null,
+    lon: g ? g[0] : null,
+    marche: null, risques: null
+  };
+  var label = p.label || p.name || '';
+  var inp = document.getElementById('addr-input');
+  if (inp) inp.value = label;
+  bien.adresse = label;
+  closeDropdown();
+  showAddrConfirmed(label, true);
+}
+
+function addressPickFree(val) {
+  _selectedFeature = null;
+  bien.adresse = val;
+  var inp = document.getElementById('addr-input');
+  if (inp) inp.value = val;
+  closeDropdown();
+  showAddrConfirmed(val, false);
+}
+
+function showAddrConfirmed(label, fromApi) {
+  var box = document.getElementById('addr-confirmed');
+  var txt = document.getElementById('addr-confirmed-text');
+  if (box) box.style.display = 'block';
+  if (txt) txt.textContent = label;
+  // Badge source
+  var badge = box ? box.querySelector('.src-badge') : null;
+  if (badge) {
+    badge.textContent = fromApi ? 'API BAN' : 'saisie libre';
+    badge.className = 'src-badge ' + (fromApi ? 'declared' : 'estimated');
+  }
+  updateAddressStepState();
+  /* MOD 1 : Extraire CP et afficher données marché */
+  extractPostalFromInput(label);
+
+}
+
+function updateAddressStepState() {
+  var val = (document.getElementById('addr-input') || {}).value || '';
+  var btn = document.getElementById('btn-2');
+  if (btn) btn.disabled = val.trim().length < 5;
+  if (val.trim().length < 5 && bien.adresse) {
+    bien.adresse = '';
+    var box = document.getElementById('addr-confirmed');
+    if (box) box.style.display = 'none';
+  }
+}
+
+function acKeydown(e) {
+  var drop = document.getElementById('ac-drop');
+  if (!drop || !drop.classList.contains('show')) return;
+  var items = drop.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') {
+    _acActiveIdx = Math.min(_acActiveIdx+1, items.length-1);
+    items.forEach(function(it, i){ it.classList.toggle('active', i===_acActiveIdx); });
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp') {
+    _acActiveIdx = Math.max(_acActiveIdx-1, 0);
+    items.forEach(function(it, i){ it.classList.toggle('active', i===_acActiveIdx); });
+    e.preventDefault();
+  } else if (e.key === 'Enter') {
+    if (_acActiveIdx >= 0 && items[_acActiveIdx]) items[_acActiveIdx].click();
+    e.preventDefault();
+  } else if (e.key === 'Escape') {
+    closeDropdown();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ÉTAPE 3 — SURFACE + PIÈCES
+═══════════════════════════════════════════════════════ */
+function dSurf(delta) {
+  bien.surface = Math.max(10, Math.min(1000, (bien.surface||80) + delta));
+  var el = document.getElementById('surf-val');
+  if (el) el.textContent = bien.surface;
+}
+
+function pickPieces(el) {
+  document.querySelectorAll('#pieces-row .piece-chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  bien.pieces = el.getAttribute('data-val') || '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   ÉTAPE 4 — OBJECTIF
+═══════════════════════════════════════════════════════ */
+function pickObj(el) {
+  document.querySelectorAll('#obj-choices .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  bien.objectif = el.getAttribute('data-val') || '';
+  var btn = document.getElementById('btn-3'); /* MOD 2 */
+  if (btn) btn.disabled = false;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TRANSITION — Bien créé
+═══════════════════════════════════════════════════════ */
+function showTransition() {
+  document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tr = document.getElementById('transition-screen');
+  if (tr) tr.classList.add('active');
+  _currentPhase = 2;
+  updateLeftPanel();
+  updateProgress(0);
+  var fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = '36%';
+  window.scrollTo(0,0);
+  populateTransitionData(); /* MOD 3 */
+}
+
+function startPhase2() {
+  _p2Enriched = true;
+  goP2(1);
+}
+
+function skipToAnalyse() {
+  startAnalyse();
+}
+
+function backToTransition() {
+  document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tr = document.getElementById('transition-screen');
+  if (tr) tr.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION PHASE 2
+═══════════════════════════════════════════════════════ */
+function goP2(n) {
+  /* MOD 4 : Remapper vers les vrais IDs HTML (1→panel-1, 2→panel-6, 3→panel-5) */
+  var panelMap = { 1: 'p2-panel-1', 2: 'p2-panel-6', 3: 'p2-panel-5' };
+  /* Aussi accepter les anciens numéros pour la compatibilité navigation */
+  var pid = panelMap[n] || ('p2-panel-' + n);
+  document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.transition-screen').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById(pid);
+  if (panel) panel.classList.add('active');
+  _currentPhase = 2;
+  _currentStep = n;
+  updateP2Stepper(n);
+  updateProgress(n);
+  updateLeftPanel();
+  window.scrollTo(0,0);
+}
+
+function updateP2Stepper(n) {
+  /* MOD 4 : 3 étapes */
+  var labels = ['Structure & état','Énergie','Points connus'];
+  for (var i=1; i<=3; i++) {
+    var step = document.getElementById('p2lr-'+i);
+    var dot  = document.getElementById('p2ld-'+i);
+    if (!step || !dot) continue;
+    if (i < n) {
+      step.className = 'p2-step done'; dot.className = 'p2-dot done';
+    } else if (i === n) {
+      step.className = 'p2-step active'; dot.className = 'p2-dot active';
+    } else {
+      step.className = 'p2-step'; dot.className = 'p2-dot todo';
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.1 STRUCTURE
+═══════════════════════════════════════════════════════ */
+function skipAnnee() {
+  enrichData.annee = '';
+  var inp = document.getElementById('p2-annee');
+  if (inp) { inp.value = ''; inp.disabled = true; inp.placeholder = 'Non renseigné'; }
+  goP2(2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.2 ÉTAT GLOBAL
+═══════════════════════════════════════════════════════ */
+function pickEtat(el) {
+  document.querySelectorAll('#etat-choices .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  enrichData.etatGlobal = el.getAttribute('data-val') || '';
+  var btn = document.getElementById('btn-p2-2');
+  if (btn) btn.disabled = false;
+  updateLiveScore();
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.3 ÉLÉMENTS
+═══════════════════════════════════════════════════════ */
+var ELEMENTS_DEF = [
+  { key:'toiture',     label:'Toiture',     icon:'🏠' },
+  { key:'menuiseries', label:'Menuiseries', icon:'🪟' },
+  { key:'isolation',   label:'Isolation',   icon:'🧱' },
+  { key:'electricite', label:'Électricité', icon:'⚡' },
+  { key:'chauffage',   label:'Chauffage',   icon:'🔥' },
+  { key:'plomberie',   label:'Plomberie',   icon:'🚿' }
+];
+
+var ELEM_OPTS = [
+  { val:'jamais',       label:'Jamais rénové', cls:'critique' },
+  { val:'plus10ans',    label:'+10 ans',        cls:'insuffisant' },
+  { val:'moins10ans',   label:'-10 ans',        cls:'moyen' },
+  { val:'recent',       label:'Récent',         cls:'bon' },
+  { val:'nr',           label:'NSP',            cls:'nr' }
+];
+
+function buildElementsGrid() {
+  var grid = document.getElementById('elements-grid');
+  if (!grid) return;
+  grid.innerHTML = ELEMENTS_DEF.map(function(def){
+    var chips = ELEM_OPTS.map(function(opt){
+      var cur = enrichData.elements[def.key] || '';
+      return '<div class="elem-chip '+opt.cls+(cur===opt.val?' selected '+opt.cls:'')+'" '
+        +'data-key="'+def.key+'" data-val="'+opt.val+'" onclick="pickElem(this)">'
+        +opt.label+'</div>';
+    }).join('');
+    return '<div class="elem-row">'
+      +'<div class="elem-name"><span class="elem-name-ico">'+def.icon+'</span>'+def.label+'</div>'
+      +'<div class="elem-chips">'+chips+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function pickElem(el) {
+  var key = el.getAttribute('data-key');
+  var val = el.getAttribute('data-val');
+  // Désélectionner dans la rangée
+  var row = el.closest('.elem-chips');
+  if (row) row.querySelectorAll('.elem-chip').forEach(function(c){
+    c.classList.remove('selected','bon','moyen','insuffisant','critique','nr');
+  });
+  el.classList.add('selected', el.className.split(' ').find(function(c){ return ELEM_OPTS.some(function(o){ return o.cls===c; }); })||'');
+  // Retrouver la classe de couleur depuis ELEM_OPTS
+  var opt = ELEM_OPTS.find(function(o){ return o.val===val; });
+  if (opt) el.classList.add(opt.cls);
+  enrichData.elements[key] = val;
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.4 TRAVAUX
+═══════════════════════════════════════════════════════ */
+var TRAVAUX_TYPES = [
+  'Toiture','Isolation combles','Isolation façade','Menuiseries / Fenêtres',
+  'Chauffage','Climatisation','Électricité','Plomberie',
+  'Salle de bain','Cuisine','Sol','Peinture / Décoration',
+  'Extension','Surélévation','Autre'
+];
+
+function pickTravauxYesNo(el) {
+  document.querySelectorAll('#travaux-yesno .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var val = el.getAttribute('data-val');
+  var form = document.getElementById('travaux-form');
+  var btn  = document.getElementById('btn-p2-4');
+  if (val === 'oui') {
+    if (form) form.style.display = '';
+    if (_travauxCount === 0) addTravail();
+    if (btn) btn.disabled = false;
+  } else {
+    if (form) form.style.display = 'none';
+    if (btn) btn.disabled = false;
+  }
+}
+
+function addTravail() {
+  _travauxCount++;
+  var idx = _travauxCount;
+  var list = document.getElementById('travaux-list');
+  if (!list) return;
+  var opts = TRAVAUX_TYPES.map(function(t){
+    return '<option value="'+t+'">'+t+'</option>';
+  }).join('');
+  var div = document.createElement('div');
+  div.className = 'travail-entry';
+  div.id = 'travail-'+idx;
+  div.innerHTML = '<div class="travail-row">'
+    +'<div><div class="field-label" style="margin-bottom:6px;">Type</div>'
+    +'<select class="field-select" id="tr-type-'+idx+'" style="font-size:13px;padding:10px 12px;"><option value="">— Sélectionner —</option>'+opts+'</select></div>'
+    +'<div><div class="field-label" style="margin-bottom:6px;">Année</div>'
+    +'<input type="number" class="field-input" id="tr-annee-'+idx+'" placeholder="2020" min="1900" max="'+(new Date().getFullYear())+'" style="font-size:15px;padding:10px 14px;"/></div>'
+    +'<button class="travail-remove" onclick="removeTravail('+idx+')" title="Supprimer">'
+    +'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    +'</button></div>';
+  list.appendChild(div);
+}
+
+function removeTravail(idx) {
+  var el = document.getElementById('travail-'+idx);
+  if (el) el.remove();
+}
+
+function collectTravaux() {
+  var list = document.getElementById('travaux-list');
+  if (!list) return [];
+  var res = [];
+  list.querySelectorAll('.travail-entry').forEach(function(entry) {
+    var idMatch = entry.id.match(/travail-(\d+)/);
+    if (!idMatch) return;
+    var i = idMatch[1];
+    var type  = (document.getElementById('tr-type-'+i)||{}).value || '';
+    var annee = (document.getElementById('tr-annee-'+i)||{}).value || '';
+    if (type) res.push({ type: type, annee: annee, source:'declared' });
+  });
+  return res;
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.5 PROBLÈMES
+═══════════════════════════════════════════════════════ */
+function toggleProblem(el) {
+  var val = el.getAttribute('data-val');
+  if (val === 'aucun') {
+    document.querySelectorAll('#problems-grid .prob-chip').forEach(function(c){ c.classList.remove('selected'); });
+    el.classList.add('selected');
+    enrichData.problemes = ['aucun'];
+    return;
+  }
+  // Désélectionner "aucun"
+  var aucun = document.querySelector('#problems-grid .prob-chip[data-val="aucun"]');
+  if (aucun) aucun.classList.remove('selected');
+  el.classList.toggle('selected');
+  // Reconstruire la liste
+  enrichData.problemes = [];
+  document.querySelectorAll('#problems-grid .prob-chip.selected').forEach(function(c){
+    enrichData.problemes.push(c.getAttribute('data-val'));
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.6 ÉNERGIE
+═══════════════════════════════════════════════════════ */
+function pickIsolation(el) {
+  document.querySelectorAll('#isolation-choices .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  enrichData.energie.isolation = el.getAttribute('data-val') || '';
+}
+
+function pickVitrage(el) {
+  document.querySelectorAll('#vitrage-choices .choice').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  enrichData.energie.vitrage = el.getAttribute('data-val') || '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   P2 — 2.7 DOCUMENTS
+═══════════════════════════════════════════════════════ */
+function triggerUpload(target) {
+  _uploadTarget = target;
+  var inp = document.getElementById('file-input-hidden');
+  if (inp) inp.click();
+}
+
+function handleFileUpload(files) {
+  if (!_uploadTarget || !files) return;
+  var list = document.getElementById('ul-'+_uploadTarget);
+  if (!list) return;
+  Array.prototype.forEach.call(files, function(file) {
+    _uploadedFiles[_uploadTarget] = _uploadedFiles[_uploadTarget] || [];
+    _uploadedFiles[_uploadTarget].push({ name: file.name, size: file.size, type: file.type });
+    var div = document.createElement('div');
+    div.className = 'upload-item';
+    div.innerHTML = '<div class="upload-item-ico">'
+      +'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>'
+      +'</div><span class="upload-item-name">'+escH(file.name)+'</span>';
+    list.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOTEUR D'ANALYSE — buildBienFromData
+   Construit l'objet bien complet avec toutes les données
+═══════════════════════════════════════════════════════ */
+function buildBienFromData(inputs, enrich) {
+  var addr  = parseAdresse(inputs.adresse||'');
+  var type  = inputs.type||'maison';
+  var surf  = inputs.surface||80;
+  var obj   = inputs.objectif||'comprendre';
+
+  var ed  = _enrichedData;
+  var vd  = _getVilleFromPostcode(addr.postalCode);
+  var lat = ed&&ed.lat ? ed.lat : vd.lat+(Math.random()-0.5)*0.04;
+  var lon = ed&&ed.lon ? ed.lon : vd.lng+(Math.random()-0.5)*0.04;
+  var city = addr.city || vd.region || 'France';
+  var prixM2 = vd.prixM2 || 2800;
+
+  /* ── Valeur ── */
+  var coeff = { maison:1.0, appartement:0.95, immeuble:1.05, terrain:0.4 }[type]||1.0;
+  // DPE impact sur la valeur
+  var annee = enrich && enrich.annee ? parseInt(enrich.annee) : null;
+  var dpePenality = 1;
+  var etatGlobal = enrich && enrich.etatGlobal;
+  if (etatGlobal === 'renover') { dpePenality = 0.88; coeff *= 0.9; }
+  else if (etatGlobal === 'rafraichir') { dpePenality = 0.95; coeff *= 0.97; }
+
+  var vBase = surf * prixM2 * coeff * dpePenality;
+  var vb = Math.round(vBase * 0.93);
+  var vh = Math.round(vBase * 1.08);
+
+  /* ── PLU ── */
+  var zonePLU = vd.zone || 'UB';
+  var extPoss = ['UA','UB'].indexOf(zonePLU) >= 0;
+  var extSurf = extPoss ? 30 : 0;
+  var surPoss = zonePLU === 'UA';
+  var divPoss = false;
+  var contra  = extPoss ? [] : ['Zone '+zonePLU+' — extension limitée'];
+
+  /* ── DPE — enrichi si données énergie disponibles ── */
+  var dpeData = calcDPE(inputs, enrich, annee);
+
+  /* ── Risques ── */
+  var risques = {
+    inondation: lat < 44.5 && lon > 2,
+    sismique:   lat > 44 && lon > 5 ? 'modéré' : 'faible',
+    argile:     'modéré',
+    radon:      vd.dep === 'fr' ? 'potentiel' : 'faible',
+    source:     'simulation-géographique'
+  };
+
+  /* ── Marché ── */
+  var marche = {
+    prixM2: prixM2,
+    tension: prixM2 > 4000 ? 'tendu' : prixM2 > 3000 ? 'modere' : 'detendu',
+    ventes_recentes: Math.floor(15+Math.random()*20),
+    source: 'simulation'
+  };
+
+  /* ── Score ── */
+  var sStr  = calcScoreStructure(enrich, annee);
+  var sRisk = risques.inondation ? 55 : risques.sismique==='modéré' ? 70 : 85;
+  var sEn   = dpeData.scoreEnergy;
+  var sGlobal = Math.round(sStr * 0.4 + sRisk * 0.25 + sEn * 0.35);
+
+  /* ── Synthèse ── */
+  var synth = genSynthese(type, dpeData.dpe, sGlobal, enrich, obj);
+
+  /* ── Priorités enrichies ── */
+  var PP = buildPriorities(type, dpeData.dpe, enrich, obj, prixM2, surf);
+
+  /* ── Complétude ── */
+  var completude = calcCompletude(inputs, enrich);
+
+  /* ── Historique depuis travaux déclarés ── */
+  var historique = [];
+  if (enrich && enrich.travauxRealises) {
+    enrich.travauxRealises.forEach(function(t) {
+      historique.push({
+        id: uid('evt'),
+        type: 'travaux',
+        titre: t.type,
+        date: t.annee || '',
+        montant: null,
+        description: t.type + (t.annee ? ' — ' + t.annee : ''),
+        source: 'declared',
+        createdAt: new Date().toISOString()
+      });
+    });
+  }
+
+  /* ── Éléments enrichis ── */
+  var elements = (enrich && enrich.elements) ? enrich.elements : {};
+
+  /* ── Documents ── */
+  var documents = [];
+  if (enrich && enrich.documents) {
+    enrich.documents.forEach(function(d) {
+      documents.push({
+        id: uid('doc'),
+        nom: d.name,
+        categorie: d.categorie || 'Autre',
+        source: 'user',
+        uploadedAt: new Date().toISOString()
+      });
+    });
+  }
+
+  return {
+    id: uid('bien'),
+    adresse: { full:addr.full, street:addr.street, city:city, postalCode:addr.postalCode, lat:lat, lon:lon },
+    bien: { type:type, surface:surf, pieces:inputs.pieces||'', annee:annee?String(annee):'' },
+    contexte: { region:vd.region, zoneMarche:city, prixM2:prixM2, valeurBasse:vb, valeurHaute:vh },
+    urbanisme: { zonePLU:zonePLU, extensionPossible:extPoss, extensionSurface:extSurf,
+                 surelevationPossible:surPoss, divisionPossible:divPoss, contraintes:contra },
+    energie: { dpe:dpeData.dpe, dpeEstime:dpeData.estim, scoreEnergy:sEn,
+               numeroDPE:null, source:dpeData.source,
+               chauffage:(enrich&&enrich.energie&&enrich.energie.chauffage)||'',
+               isolation:(enrich&&enrich.energie&&enrich.energie.isolation)||'',
+               vitrage:(enrich&&enrich.energie&&enrich.energie.vitrage)||'' },
+    marche: marche,
+    risques: risques,
+    analyse: { scoreGlobal:sGlobal, scoreStructure:sStr, scoreRisque:sRisk,
+               synthese:synth, scoreExplication:'Score calculé à partir de l\'état structural, énergétique et du contexte local.',
+               priorites:PP },
+    elements: elements,
+    etatGlobal: etatGlobal || '',
+    problemes: (enrich&&enrich.problemes)||[],
+    ownerContext: { revenuFiscalReference:null, tailleFoyer:null, statutOccupation:null },
+    documents: documents,
+    collaborateurs: [],
+    historique: historique,
+    sharedLinks: [],
+    objectif: obj,
+    completude: completude,
+    /* Méta-données sources */
+    meta: {
+      sourceAdresse: _selectedFeature ? 'api-ban' : 'saisie-libre',
+      sourcePLU: 'simulation',
+      sourceValeur: 'simulation',
+      sourceDPE: dpeData.source,
+      sourceElements: Object.keys(elements).length > 0 ? 'declared' : 'none',
+      enrichPhase2: _p2Enriched,
+      createdAt: new Date().toISOString()
+    },
+    access: { level:'preview' },
+    verification: { status:'required', relation:null, method:null, documentName:null,
+                    submittedAt:null, reviewedAt:null }
+  };
+}
+
+/* ── Calcul DPE enrichi ── */
+function calcDPE(inputs, enrich, annee) {
+  var chauff = enrich && enrich.energie && enrich.energie.chauffage;
+  var isol   = enrich && enrich.energie && enrich.energie.isolation;
+  var vitr   = enrich && enrich.energie && enrich.energie.vitrage;
+
+  // Score de 0 à 100 (100 = très bien)
+  var score = 60; // base
+
+  if (annee) {
+    var age = new Date().getFullYear() - annee;
+    if (age > 50) score -= 20;
+    else if (age > 30) score -= 10;
+    else if (age < 10) score += 15;
+  }
+  if (chauff === 'pac') score += 20;
+  else if (chauff === 'gaz') score -= 5;
+  else if (chauff === 'fioul') score -= 15;
+  else if (chauff === 'electrique') score -= 5;
+  else if (chauff === 'bois') score += 5;
+
+  if (isol === 'bonne') score += 15;
+  else if (isol === 'correcte') score += 5;
+  else if (isol === 'mauvaise') score -= 15;
+
+  if (vitr === 'triple') score += 10;
+  else if (vitr === 'double') score += 5;
+  else if (vitr === 'simple') score -= 10;
+
+  var etat = enrich && enrich.elements;
+  if (etat) {
+    if (etat.isolation === 'recent') score += 8;
+    else if (etat.isolation === 'jamais') score -= 12;
+    if (etat.chauffage === 'recent') score += 8;
+    else if (etat.chauffage === 'jamais') score -= 12;
+  }
+
+  score = Math.max(10, Math.min(100, score));
+  var dpe = score >= 90?'A': score >= 75?'B': score >= 60?'C': score >= 50?'D': score >= 35?'E': score >= 20?'F':'G';
+  var hasEnrichData = chauff || isol || vitr;
+  return {
+    dpe: dpe,
+    scoreEnergy: score,
+    estim: !hasEnrichData,
+    source: hasEnrichData ? 'declared' : 'estimation'
+  };
+}
+
+/* ── Calcul score structural ── */
+function calcScoreStructure(enrich, annee) {
+  if (!enrich || Object.keys(enrich.elements||{}).length === 0) {
+    // Score par âge seulement
+    if (!annee) return 65;
+    var age = new Date().getFullYear() - annee;
+    return age > 50 ? 50 : age > 30 ? 62 : age > 15 ? 74 : 82;
+  }
+  var WEIGHTS = { toiture:0.25, menuiseries:0.15, isolation:0.2, electricite:0.15, chauffage:0.15, plomberie:0.1 };
+  var SCORES  = { recent:95, moins10ans:75, plus10ans:50, jamais:25, nr:60 };
+  var total = 0, totalW = 0;
+  for (var k in WEIGHTS) {
+    var val = enrich.elements[k] || 'nr';
+    total  += (SCORES[val] || 60) * WEIGHTS[k];
+    totalW += WEIGHTS[k];
+  }
+  return Math.round(total / totalW);
+}
+
+/* ── Génération synthèse ── */
+function genSynthese(type, dpe, score, enrich, obj) {
+  var typeLbl = { maison:'Maison', appartement:'Appartement', immeuble:'Immeuble', terrain:'Terrain' }[type] || 'Bien';
+  var dpeMsg = { A:'excellente performance énergétique', B:'très bonne performance énergétique',
+                 C:'bonne efficacité énergétique', D:'performance énergétique correcte',
+                 E:'performance énergétique à améliorer', F:'mauvaise performance énergétique', G:'très mauvaise performance énergétique' };
+  var q = score>=80?'excellent état structurel':score>=65?'bon état général':score>=50?'état correct':' nécessite des actions';
+  var enr = enrich && Object.keys(enrich.elements||{}).length > 2 ? ' — analyse enrichie avec données déclarées.' : '.';
+  return typeLbl+' en '+q+', '+( dpeMsg[dpe]||'DPE inconnu')+enr;
+}
+
+/* ── Construction priorités ── */
+function buildPriorities(type, dpe, enrich, obj, prixM2, surf) {
+  var prios = [];
+
+  // Priorités DPE
+  if (['E','F','G'].indexOf(dpe)>=0) {
+    prios.push({ urgence:'critical', titre:'DPE '+dpe+' — passif interdit dès 2028',
+      description:'Ce bien sera interdit à la location. Rénovation énergétique prioritaire.',
+      gain: '+' + Math.round(surf * prixM2 * 0.06 / 1000) + 'k € potentiel' });
+  } else if (dpe === 'D') {
+    prios.push({ urgence:'high', titre:'Optimiser vers DPE C',
+      description:'Passage en classe C envisageable avec isolation et/ou chauffage.',
+      gain: '+' + Math.round(surf * prixM2 * 0.04 / 1000) + 'k € potentiel' });
+  }
+
+  // Priorités éléments
+  if (enrich && enrich.elements) {
+    var el = enrich.elements;
+    if (el.electricite === 'jamais' || el.electricite === 'plus10ans') {
+      prios.push({ urgence:'high', titre:'Mise aux normes électricité',
+        description:'Installation ancienne — vérification et mise en conformité recommandées.',
+        gain: '' });
+    }
+    if (el.toiture === 'jamais' || el.toiture === 'plus10ans') {
+      prios.push({ urgence:'high', titre:'Inspection toiture',
+        description:'Toiture ancienne — risque d\'infiltrations et de déperditions thermiques.',
+        gain: '' });
+    }
+  }
+
+  // Priorités problèmes
+  if (enrich && enrich.problemes) {
+    if (enrich.problemes.indexOf('humidite')>=0) {
+      prios.push({ urgence:'high', titre:'Traitement humidité',
+        description:'Problème d\'humidité déclaré — investigation et traitement nécessaires.',
+        gain: '' });
+    }
+    if (enrich.problemes.indexOf('fissures')>=0) {
+      prios.push({ urgence:'high', titre:'Expertise fissures',
+        description:'Fissures signalées — expertise structurelle recommandée.',
+        gain: '' });
+    }
+  }
+
+  // Objectif
+  if (obj === 'vendre' || obj === 'investir') {
+    prios.push({ urgence:'low', titre:'Valorisation avant vente',
+      description:'Valorisation DPE + dossier complet = argument de négociation.',
+      gain: '' });
+  }
+
+  // Toujours au moins 1 priorité
+  if (prios.length === 0) {
+    prios.push({ urgence:'low', titre:'Compléter le dossier',
+      description:'Ajoutez les documents officiels pour passer les données en "Vérifié".',
+      gain: '' });
+  }
+
+  return prios.slice(0, 5);
+}
+
+/* ── Calcul complétude ── */
+function calcCompletude(inputs, enrich) {
+  var fields = [
+    inputs.type,
+    inputs.adresse,
+    inputs.surface,
+    inputs.pieces,
+    inputs.objectif,
+    enrich && enrich.annee,
+    enrich && enrich.etatGlobal,
+    enrich && Object.keys(enrich.elements||{}).length > 0,
+    enrich && enrich.travauxRealises && enrich.travauxRealises.length >= 0,
+    enrich && enrich.energie && enrich.energie.chauffage
+  ];
+  var filled = fields.filter(Boolean).length;
+  return { score: Math.round(filled / fields.length * 100), filled: filled, total: fields.length };
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANALYSE
+═══════════════════════════════════════════════════════ */
+function startAnalyse() {
+  console.log('[HERAKL] startAnalyse called');
+
+  // Récupérer les données Phase 2
+  if (_p2Enriched) {
+    var anneeInp = document.getElementById('p2-annee');
+    if (anneeInp && anneeInp.value) enrichData.annee = anneeInp.value;
+
+    /* Récupérer l'état depuis p2-panel-1 */
+    var etatSel = document.querySelector('#etat-choices .choice.selected');
+    if (etatSel) enrichData.etatGlobal = etatSel.getAttribute('data-val');
+
+    /* niveaux-row supprimé (MOD4) */
+
+    var chauff = document.getElementById('p2-chauffage');
+    if (chauff) enrichData.energie.chauffage = chauff.value;
+
+    enrichData.travauxRealises = collectTravaux();
+    enrichData.documents = [];
+    (_uploadedFiles.dpe||[]).forEach(function(f){ enrichData.documents.push({name:f.name, categorie:'DPE'}); });
+    (_uploadedFiles.plans||[]).forEach(function(f){ enrichData.documents.push({name:f.name, categorie:'Plans'}); });
+  }
+
+  // Afficher l'écran d'analyse
+  document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.transition-screen').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('analyse-screen').classList.add('active');
+
+  var fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = '90%';
+
+  _currentPhase = 3;
+  updateLeftPanel();
+
+  // Animation des étapes
+  var steps = ['as-1','as-2','as-3'], delays = [0,700,1400];
+  steps.forEach(function(id, i) {
+    setTimeout(function(){
+      steps.forEach(function(s){ document.getElementById(s).className='analyse-step todo'; });
+      for (var j=0; j<i; j++) document.getElementById(steps[j]).className='analyse-step done';
+      document.getElementById(id).className = 'analyse-step active';
+    }, delays[i]);
+  });
+
+  setTimeout(function(){
+    document.getElementById('as-3').className = 'analyse-step done';
+    try {
+      console.log('[HERAKL] building result...');
+      _currentResult = buildBienFromData(bien, _p2Enriched ? enrichData : null);
+      console.log('[HERAKL] result built ✓', _currentResult);
+      setTimeout(function(){ showResult(_currentResult); }, 400);
+    } catch(err) {
+      console.error('[HERAKL] analyse failed', err);
+      var screen = document.getElementById('analyse-screen');
+      if (screen) {
+        screen.innerHTML += '<div style="margin-top:20px;padding:14px 18px;background:#FEE2E2;border:1px solid #FECACA;border-radius:10px;color:#991B1B;font-size:13px;line-height:1.5;">'
+          +'⚠ Erreur pendant l\'analyse. <small style="color:#B91C1C;">'+err.message+'</small><br><br>'
+          +'<button onclick="window.location.reload()" style="padding:8px 16px;background:#EF4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Réessayer</button>'
+          +'</div>';
+      }
+    }
+  }, 2400);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RÉSULTAT
+═══════════════════════════════════════════════════════ */
+function showResult(r) {
+  console.log('[HERAKL] showResult called', r);
+  if (!r || !r.analyse || !r.bien || !r.adresse) {
+    console.error('[HERAKL] showResult: données manquantes');
+    return;
+  }
+
+  document.getElementById('analyse-screen').classList.remove('active');
+  document.getElementById('result-screen').classList.add('active');
+
+  var fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = '100%';
+
+  var score = r.analyse.scoreGlobal || 0;
+  var tl = {maison:'Maison',appartement:'Appartement',immeuble:'Immeuble',terrain:'Terrain'}[r.bien.type] || 'Bien';
+
+  var el;
+  el = document.getElementById('result-title'); if(el) el.textContent = tl+' \u2014 '+r.bien.surface+' m\u00b2 analys\u00e9.';
+  el = document.getElementById('result-addr');  if(el) el.textContent = (r.adresse.street||'')+(r.adresse.city?' \u00b7 '+r.adresse.city:'');
+
+  // Badge enrichissement
+  if (_p2Enriched) {
+    var eb = document.getElementById('result-enrich-badge');
+    if (eb) eb.style.display = 'block';
+  }
+
+  // Ring animé
+  var ring = document.getElementById('rs-ring');
+  if (ring) {
+    setTimeout(function(){
+      ring.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)';
+      ring.style.strokeDashoffset = 207.3 - (score/100)*207.3;
+      ring.setAttribute('stroke', score>=75?'#4ADE80':score>=55?'#60A5FA':'#FCD34D');
+    }, 100);
+  }
+  el = document.getElementById('rs-pct');  if(el) el.textContent = score+'%';
+  el = document.getElementById('rs-val');  if(el) el.textContent = score>=80?'Excellent':score>=65?'Bien valoris\u00e9':score>=50?'Bien moyen':'\u00c0 am\u00e9liorer';
+  el = document.getElementById('rs-synth');if(el) el.textContent = r.analyse.synthese || '';
+
+  // Complétude
+  if (r.completude && r.completude.score > 0) {
+    var compBloc = document.getElementById('rs-compl');
+    if (compBloc) {
+      compBloc.style.display = 'block';
+      var cf = document.getElementById('rs-compl-fill');
+      var cl = document.getElementById('rs-compl-lbl');
+      if (cf) setTimeout(function(){ cf.style.width = r.completude.score+'%'; }, 300);
+      if (cl) cl.textContent = r.completude.score+'% du dossier rempli';
+    }
+  }
+
+  // KPIs
+  el = document.getElementById('rs-valeur');
+  if(el && r.contexte) el.textContent = fmtK(r.contexte.valeurBasse)+' \u2013 '+fmtK(r.contexte.valeurHaute);
+
+  el = document.getElementById('rs-dpe');
+  if(el && r.energie) el.textContent = 'DPE '+(r.energie.dpe||'?')+(r.energie.dpeEstime?' (est.)':' (\u2713)');
+
+  el = document.getElementById('rs-marche');
+  if(el && r.marche) el.textContent = (r.marche.prixM2||'?').toLocaleString('fr-FR')+' \u20ac/m\u00b2';
+
+  // Priorités
+  var prios = (r.analyse && r.analyse.priorites) || [];
+  var pU = {critical:'h', high:'m', low:'l'};
+  el = document.getElementById('result-prios');
+  if (el) {
+    el.innerHTML = prios.slice(0, 3).map(function(p) {
+      return '<div class="result-prio"><div class="rp-dot '+(pU[p.urgence]||'m')+'"></div>'
+        +'<div style="flex:1;"><div class="rp-title">'+escH(p.titre)+'</div>'
+        +'<div class="rp-sub">'+escH(p.description)+'</div></div>'
+        +(p.gain?'<div class="rp-gain">'+escH(p.gain)+'</div>':'')+'</div>';
+    }).join('')
+    +(prios.length > 3
+      ? '<div class="result-prio" style="filter:blur(3px);pointer-events:none;opacity:.65;">'
+        +'<div class="rp-dot l"></div><div style="flex:1;"><div class="rp-title">'+escH(prios[3].titre)+'</div></div></div>'
+      : '')
+    +'<div style="margin-top:10px;padding:9px 13px;background:var(--amber-lt);border:1px solid #FDE68A;border-radius:9px;font-size:11.5px;color:var(--amber);line-height:1.5;">'
+    +'\uD83D\uDD12 Dossier complet et toutes les recommandations accessibles après création du compte.</div>';
+  }
+
+  // Sauvegarder
+  HK.set('herakl_pending_bien', r);
+  console.log('[HERAKL] pending bien saved \u2713');
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERS AUTH
+═══════════════════════════════════════════════════════ */
+function goToDashboard() {
+  console.log('[HERAKL] redirecting to auth');
+  window.location.href = 'herakl-auth.html';
+}
+
+/* ═══════════════════════════════════════════════════════
+   INIT — binding événements
+═══════════════════════════════════════════════════════ */
+
+/* ════ MOD 1 : Révélation marché en temps réel ════ */
+function showMarketPreview(postalCode) {
+  var vd = _getVilleFromPostcode(postalCode);
+  if (!vd || vd === VILLES_DB.default) return;
+  var surf = bien.surface || 80;
+  var prixM2 = vd.prixM2;
+  var tension = prixM2 > 5000 ? 'Très tendu ↑' : prixM2 > 3500 ? 'Tendu' : prixM2 > 2500 ? 'Modéré' : 'Détendu';
+  var valMin = Math.round(surf * prixM2 * 0.9 / 1000) * 1000;
+  var valMax = Math.round(surf * prixM2 * 1.1 / 1000) * 1000;
+
+  var box = document.getElementById('addr-market-preview');
+  var elPrix = document.getElementById('mpb-prix');
+  var elTension = document.getElementById('mpb-tension');
+  var elRegion = document.getElementById('mpb-region');
+  if (!box) return;
+
+  if (elPrix)    elPrix.textContent    = prixM2.toLocaleString('fr-FR') + ' €/m²';
+  if (elTension) elTension.textContent = tension;
+  if (elRegion)  elRegion.textContent  = vd.region || '—';
+
+  box.style.display = 'block';
+  box.style.animation = 'fadeSlideIn .3s cubic-bezier(.16,1,.3,1)';
+
+  /* Stocker les données pour la transition */
+  _marketData = { prixM2: prixM2, tension: tension, valMin: valMin, valMax: valMax, region: vd.region };
+}
+
+/* ════ MOD 3 : Remplir la transition avec données réelles ════ */
+function populateTransitionData() {
+  if (!_marketData) return;
+  var surf = bien.surface || 80;
+  var el;
+  /* Valeur : fourchette basée sur la surface réelle */
+  var valMin = Math.round(surf * _marketData.prixM2 * 0.90 / 1000) * 1000;
+  var valMax = Math.round(surf * _marketData.prixM2 * 1.10 / 1000) * 1000;
+  el = document.getElementById('tr-valeur');
+  if (el) el.textContent = fmtK(valMin) + ' – ' + fmtK(valMax);
+  el = document.getElementById('tr-prix');
+  if (el) el.textContent = _marketData.prixM2.toLocaleString('fr-FR') + ' €/m² · ' + _marketData.tension;
+  /* Score préliminaire honnête : indique 'approximatif' */
+  var scoreP = Math.round(50 + (_marketData.prixM2 > 5000 ? 8 : _marketData.prixM2 > 3500 ? 5 : 0));
+  el = document.getElementById('tr-score');
+  if (el) {
+    el.textContent = '~' + scoreP;
+    el.style.color = '#D97706'; /* Ambre = approximatif */
+  }
+  /* Afficher la tension dans le badge */
+  var hintsEl = document.querySelector('.tr-enrich-hint span');
+  if (hintsEl && _marketData.tension) {
+    hintsEl.textContent = '3 questions pour un score complet (marché ' + _marketData.tension.toLowerCase() + ')';
+  }
+}
+
+/* ════ MOD 1 : Patch addressInput pour déclencher le preview ════ */
+function extractPostalFromInput(val) {
+  var cp = (val.match(/\d{5}/) || [])[0];
+  if (cp) showMarketPreview(cp);
+}
+
+/* ════ MOD 5 : Score progressif pendant phase 2 ════ */
+function updateLiveScore() {
+  var anneeEl = document.getElementById('p2-annee');
+  var annee = anneeEl ? parseInt(anneeEl.value) || null : null;
+  var etat = enrichData.etatGlobal || '';
+
+  /* Calcul rapide */
+  var sStr;
+  if (annee) {
+    var age = new Date().getFullYear() - annee;
+    sStr = age > 50 ? 50 : age > 30 ? 62 : age > 15 ? 74 : 82;
+  } else {
+    sStr = 60;
+  }
+  var etatBonus = etat === 'bon' ? 8 : etat === 'rafraichir' ? -5 : etat === 'renover' ? -18 : 0;
+  var sRisk = 80; /* Défaut sans données risques */
+  var sEn = 60;   /* Défaut sans données énergie */
+  var scoreEst = Math.round((sStr + etatBonus) * 0.4 + sRisk * 0.25 + sEn * 0.35);
+  scoreEst = Math.max(30, Math.min(95, scoreEst));
+
+  var el = document.getElementById('psl-val');
+  if (el) {
+    el.textContent = scoreEst;
+    el.style.color = scoreEst >= 70 ? '#16A34A' : scoreEst >= 50 ? '#D97706' : '#EF4444';
+    el.style.transition = 'color .3s, transform .2s';
+    el.style.transform = 'scale(1.15)';
+    setTimeout(function(){ el.style.transform = 'scale(1)'; }, 200);
+  }
+}
+
+
+function init() {
+  console.log('[HERAKL] init()');
+
+  /* ── Bouton étape 1 ── */
+  document.getElementById('btn-1').addEventListener('click', function() {
+    if (!bien.type) return;
+    goTo(2);
+  });
+
+  /* ── Choices type ── */
+  document.querySelectorAll('#type-choices .choice').forEach(function(card) {
+    card.addEventListener('click', function(){ pickType(this); });
+  });
+
+  /* ── Adresse input ── */
+  var addrInp = document.getElementById('addr-input');
+  if (addrInp) {
+    addrInp.addEventListener('input', function(){ addressInput(this.value); });
+    addrInp.addEventListener('keydown', function(e){ acKeydown(e); });
+    addrInp.addEventListener('input', function(){ updateAddressStepState(); });
+  }
+
+  /* Fermer dropdown on clic outside */
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.autocomplete-wrap')) closeDropdown();
+  });
+
+  /* Btn step 2 : continuer si adresse saisie */
+  document.getElementById('btn-2').addEventListener('click', function() {
+    if (!bien.adresse && addrInp && addrInp.value.trim().length >= 5) {
+      bien.adresse = addrInp.value.trim();
+    }
+    if (bien.adresse || (addrInp && addrInp.value.trim().length >= 5)) {
+      if (!bien.adresse) bien.adresse = addrInp.value.trim();
+      goTo(3);
+    }
+  });
+
+  /* ── Surface ── */
+  var surfEl = document.getElementById('surf-val');
+  if (surfEl) surfEl.textContent = bien.surface;
+
+  /* ── Pièces ── */
+  document.querySelectorAll('#pieces-row .piece-chip').forEach(function(chip) {
+    chip.addEventListener('click', function(){ pickPieces(this); });
+  });
+
+  /* ── Objectif ── */
+  document.querySelectorAll('#obj-choices .choice').forEach(function(card) {
+    card.addEventListener('click', function(){ pickObj(this); });
+  });
+
+  /* MOD 2 : btn-3 = bouton fusionné (surface+objectif) → transition */
+  /* Le btn-3 est déjà configuré inline pour showTransition() */
+
+  /* ── Phase 2 — état global ── */
+  document.querySelectorAll('#etat-choices .choice').forEach(function(card) {
+    card.addEventListener('click', function(){
+      pickEtat(this);
+      updateLiveScore();
+      var btn = document.getElementById('btn-p2-2');
+      if (btn) btn.disabled = false;
+    });
+  });
+
+  /* MOD4 : btn-p2-2 supprimé, navigation gérée inline */
+
+  /* ── Phase 2 — éléments ── */
+  buildElementsGrid();
+
+  /* ── Phase 2 — travaux yes/no ── */
+  document.querySelectorAll('#travaux-yesno .choice').forEach(function(card) {
+    card.addEventListener('click', function(){ pickTravauxYesNo(this); });
+  });
+
+  /* ── Phase 2 — niveaux ── */
+  document.querySelectorAll('#niveaux-row .piece-chip').forEach(function(chip) {
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('#niveaux-row .piece-chip').forEach(function(c){ c.classList.remove('selected'); });
+      this.classList.add('selected');
+      enrichData.niveaux = this.getAttribute('data-val');
+    });
+  });
+
+  /* ── Phase 2 — isolation ── */
+  document.querySelectorAll('#isolation-choices .choice').forEach(function(card) {
+    card.addEventListener('click', function(){ pickIsolation(this); });
+  });
+
+  /* ── Phase 2 — vitrage ── */
+  document.querySelectorAll('#vitrage-choices .choice').forEach(function(card) {
+    card.addEventListener('click', function(){ pickVitrage(this); });
+  });
+
+  /* ── Phase 2 — problèmes ── */
+  document.querySelectorAll('#problems-grid .prob-chip').forEach(function(chip) {
+    chip.addEventListener('click', function(){ toggleProblem(this); });
+  });
+
+  /* ── Upload (désactivé — géré dans le dashboard) ── */
+
+  /* ── Upload drag & drop désactivé (dans le dashboard) ── */
+
+  /* ── Pré-remplir depuis URL ── */
+  var params = new URLSearchParams(window.location.search);
+  var addrParam = params.get('adresse');
+  if (addrParam && addrInp) {
+    addrInp.value = addrParam;
+    bien.adresse = addrParam;
+    showAddrConfirmed(addrParam, false);
+  }
+
+  updateProgress(1);
+  updateStepper(1);
+}
+
+/* Appel initial */
+document.addEventListener("DOMContentLoaded", function(){ init(); });
+
+
+</script>html>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HERAKL — Le dossier numérique de votre bien immobilier</title>
+<!-- NOUVELLE LANDING V2 -->
+<meta name="description" content="À partir de votre adresse, HERAKL analyse votre bien, estime sa valeur, identifie ses risques et vous montre comment le valoriser."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root{
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-mid:#DBEAFE;--blue-dk:#1D4ED8;
+  --ink:#0F172A;--ink2:#1E293B;--sec:#64748B;--muted:#94A3B8;
+  --border:#E2E8F0;--bg:#F8FAFC;--card:#FFFFFF;
+  --green:#16A34A;--green-lt:#DCFCE7;
+  --amber:#D97706;--amber-lt:#FEF3C7;
+  --red:#EF4444;
+  --r:14px;
+  --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+h1,h2,h3,.logo-text,.btn-cta,.btn-outline{font-family:'Sora',sans-serif;}
+a{text-decoration:none;color:inherit;}
+img{display:block;}
+
+/* ══════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════ */
+.navbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+  transition:box-shadow .2s;
+}
+.navbar.scrolled{box-shadow:0 2px 16px rgba(15,23,42,.07);}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;padding:0 28px;
+  height:66px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:30px;height:30px;background:var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.logo-text{font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.03em;}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nav-link{font-size:14px;font-weight:500;color:var(--sec);padding:8px 14px;border-radius:8px;transition:all .14s;cursor:pointer;border:none;background:none;}
+.nav-link:hover{color:var(--ink);background:rgba(15,23,42,.04);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.btn-ghost-sm{font-size:13px;font-weight:600;color:var(--sec);background:none;border:1px solid var(--border);border-radius:8px;padding:8px 16px;cursor:pointer;transition:all .14s;}
+.btn-ghost-sm:hover{border-color:var(--blue);color:var(--blue);}
+.btn-cta-sm{font-size:13px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:9px;padding:9px 20px;cursor:pointer;transition:all .14s;box-shadow:0 2px 8px rgba(37,99,235,.22);white-space:nowrap;}
+.btn-cta-sm:hover{background:var(--blue-dk);}
+.nav-burger{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--ink);}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero{
+  background:linear-gradient(160deg,#050D1A 0%,#0A1628 40%,#0F2040 70%,#1B1040 100%);
+  padding:90px 28px 0;overflow:hidden;position:relative;
+}
+.hero::before{
+  content:'';position:absolute;top:-200px;right:-100px;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
+  background:linear-gradient(to bottom,transparent,var(--bg));
+  pointer-events:none;z-index:2;
+}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:24px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  padding:5px 14px;border-radius:100px;
+}
+.hero-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;flex-shrink:0;}
+.hero-h1{
+  font-size:clamp(36px,5vw,68px);font-weight:800;
+  color:#F0F4FF;letter-spacing:-.05em;line-height:1.05;
+  margin-bottom:24px;max-width:760px;
+}
+.hero-h1 em{font-style:normal;color:#60A5FA;}
+.hero-sub{
+  font-size:clamp(15px,1.6vw,18px);color:rgba(255,255,255,.52);
+  line-height:1.7;max-width:540px;margin-bottom:40px;
+}
+.hero-ctas{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:72px;}
+.btn-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:15px;font-weight:700;color:#fff;
+  background:var(--blue);border:none;border-radius:12px;
+  padding:15px 28px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(37,99,235,.4);
+  transition:all .15s;letter-spacing:-.01em;
+}
+.btn-cta:hover{background:var(--blue-dk);transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,.45);}
+.btn-cta svg{width:16px;height:16px;}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:14px;font-weight:600;color:rgba(255,255,255,.65);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;padding:14px 24px;cursor:pointer;transition:all .15s;
+}
+.btn-outline:hover{background:rgba(255,255,255,.12);color:#fff;}
+.btn-outline svg{width:14px;height:14px;}
+
+/* Hero mockup */
+.hero-mockup{
+  max-width:900px;margin:0 auto;
+  background:#0D1F3C;border:1px solid rgba(255,255,255,.1);
+  border-radius:20px 20px 0 0;overflow:hidden;
+  box-shadow:0 -8px 60px rgba(0,0,0,.4);
+}
+.mock-topbar{
+  height:40px;background:#0A1628;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;padding:0 16px;gap:8px;
+}
+.mock-dot{width:10px;height:10px;border-radius:50%;}
+.mock-url{
+  flex:1;margin:0 12px;background:rgba(255,255,255,.06);
+  border-radius:5px;height:22px;display:flex;align-items:center;padding:0 10px;
+  font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);
+}
+.mock-body{display:grid;grid-template-columns:220px 1fr;min-height:360px;}
+.mock-left{
+  background:#06101E;border-right:1px solid rgba(255,255,255,.06);
+  padding:20px 16px;
+}
+.mock-well-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:14px;margin-bottom:14px;
+}
+.mock-well-addr{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:#F0F4FF;margin-bottom:3px;}
+.mock-well-meta{font-size:10px;color:rgba(255,255,255,.3);}
+.mock-dpe{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);
+  border-radius:6px;padding:4px 8px;
+}
+.mock-dpe-letter{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:#F97316;}
+.mock-dpe-text{font-size:9px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;}
+.mock-score{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);border-radius:8px;padding:10px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.mock-score-ring{width:32px;height:32px;flex-shrink:0;}
+.mock-score-label{font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;}
+.mock-score-val{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#93C5FD;}
+.mock-nav-items{display:flex;flex-direction:column;gap:3px;}
+.mock-nav-item{font-size:11px;color:rgba(255,255,255,.35);padding:7px 10px;border-radius:7px;display:flex;align-items:center;gap:7px;}
+.mock-nav-item.active{background:rgba(37,99,235,.15);color:#93C5FD;font-weight:600;}
+.mock-nav-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.mock-right{padding:20px;display:flex;flex-direction:column;gap:12px;}
+.mock-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px;}
+.mock-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.mock-card-title{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:#F0F4FF;}
+.mock-badge{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:10px;font-weight:700;}
+.mock-badge.amber{background:rgba(217,119,6,.2);color:#FCD34D;}
+.mock-badge.blue{background:rgba(37,99,235,.25);color:#93C5FD;}
+.mock-badge.green{background:rgba(22,163,74,.2);color:#4ADE80;}
+.mock-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.mock-bar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.mock-bar-fill{height:100%;border-radius:2px;}
+.mock-label{font-size:9px;color:rgba(255,255,255,.3);white-space:nowrap;}
+.mock-val{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:#F0F4FF;white-space:nowrap;}
+.mock-devis-row{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:7px;margin-bottom:5px;}
+.mock-devis-row:last-child{margin-bottom:0;}
+.mock-devis-title{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);flex:1;}
+.mock-devis-amount{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:#F0F4FF;}
+
+/* ══════════════════════════════════════
+   BANDE BÉNÉFICES
+══════════════════════════════════════ */
+.benefits-band{
+  background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:0;
+}
+.benefits-inner{
+  max-width:var(--max);margin:0 auto;padding:0 28px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.benefit-item{
+  padding:28px 24px;border-right:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:14px;
+}
+.benefit-item:last-child{border-right:none;}
+.benefit-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  margin-top:1px;
+}
+.benefit-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.02em;}
+.benefit-sub{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* ══════════════════════════════════════
+   SECTION GÉNÉRIQUE
+══════════════════════════════════════ */
+.section{padding:96px 28px;}
+.section-inner{max-width:var(--max);margin:0 auto;}
+.section-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  color:var(--blue);text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:14px;display:block;
+}
+.section-h2{
+  font-size:clamp(28px,3.5vw,44px);font-weight:800;
+  color:var(--ink);letter-spacing:-.04em;line-height:1.1;
+  margin-bottom:16px;max-width:640px;
+}
+.section-h2 em{font-style:normal;color:var(--blue);}
+.section-sub{font-size:16px;color:var(--sec);line-height:1.65;max-width:520px;margin-bottom:52px;}
+
+/* ══════════════════════════════════════
+   POURQUOI HERAKL — 4 cartes
+══════════════════════════════════════ */
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.why-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:28px;position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.why-card:hover{border-color:var(--blue-mid);box-shadow:0 8px 32px rgba(37,99,235,.07);}
+.why-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,var(--card-glow,rgba(37,99,235,.05)) 0%,transparent 70%);
+  pointer-events:none;
+}
+.why-card:nth-child(1){--card-glow:rgba(37,99,235,.07);}
+.why-card:nth-child(2){--card-glow:rgba(22,163,74,.06);}
+.why-card:nth-child(3){--card-glow:rgba(217,119,6,.06);}
+.why-card:nth-child(4){--card-glow:rgba(124,58,237,.06);}
+.why-card-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.why-card-num{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  color:var(--muted);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.why-card-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin-bottom:10px;}
+.why-card-desc{font-size:14px;color:var(--sec);line-height:1.65;margin-bottom:18px;}
+.why-card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:4px 10px;border-radius:20px;background:var(--bg);border:1px solid var(--border);color:var(--sec);}
+
+/* ══════════════════════════════════════
+   COMMENT ÇA MARCHE — 3 étapes
+══════════════════════════════════════ */
+.how-section{background:var(--ink);padding:96px 28px;}
+.how-inner{max-width:var(--max);margin:0 auto;}
+.how-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:16px;display:block;}
+.how-h2{font-family:'Sora',sans-serif;font-size:clamp(28px,3.5vw,44px);font-weight:800;color:#F0F4FF;letter-spacing:-.04em;line-height:1.1;margin-bottom:14px;}
+.how-h2 em{font-style:normal;color:#60A5FA;}
+.how-sub{font-size:16px;color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:60px;max-width:480px;}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.08);border-radius:16px;overflow:hidden;}
+.how-step{background:#0A1628;padding:36px 32px;position:relative;}
+.how-step-num{
+  font-family:'Sora',sans-serif;font-size:48px;font-weight:800;
+  color:rgba(255,255,255,.06);letter-spacing:-.05em;line-height:1;
+  margin-bottom:20px;
+}
+.how-step-icon{
+  width:42px;height:42px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.how-step-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#F0F4FF;letter-spacing:-.03em;margin-bottom:10px;}
+.how-step-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.65;}
+.how-step-arrow{
+  position:absolute;top:50%;right:-14px;
+  width:28px;height:28px;border-radius:50%;
+  background:#1E293B;border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.4);z-index:2;transform:translateY(-50%);
+}
+
+/* ══════════════════════════════════════
+   CAS D'USAGE — 3 colonnes
+══════════════════════════════════════ */
+.usecases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.usecase-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:28px;transition:all .2s;
+}
+.usecase-card:hover{border-color:var(--blue-mid);transform:translateY(-3px);box-shadow:0 12px 40px rgba(37,99,235,.08);}
+.usecase-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  padding:4px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em;
+  margin-bottom:18px;
+}
+.usecase-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin-bottom:10px;}
+.usecase-desc{font-size:13px;color:var(--sec);line-height:1.65;margin-bottom:20px;}
+.usecase-list{display:flex;flex-direction:column;gap:7px;}
+.usecase-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--sec);}
+.usecase-check{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* ══════════════════════════════════════
+   RÉASSURANCE
+══════════════════════════════════════ */
+.trust-section{background:#fff;padding:80px 28px;border-top:1px solid var(--border);}
+.trust-inner{max-width:var(--max);margin:0 auto;}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px;}
+.trust-card{
+  padding:24px;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);text-align:center;
+}
+.trust-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.trust-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.trust-desc{font-size:12.5px;color:var(--sec);line-height:1.6;}
+.metrics-band{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border-radius:12px;overflow:hidden;margin-top:40px;
+}
+.metric{background:var(--bg);padding:24px;text-align:center;}
+.metric-val{font-family:'Sora',sans-serif;font-size:36px;font-weight:800;color:var(--blue);letter-spacing:-.05em;line-height:1;}
+.metric-label{font-size:13px;color:var(--sec);margin-top:4px;}
+
+/* ══════════════════════════════════════
+   CTA FINAL
+══════════════════════════════════════ */
+.cta-final{
+  background:linear-gradient(160deg,#0A1628,#0F2040 50%,#1a1040);
+  padding:100px 28px;text-align:center;position:relative;overflow:hidden;
+}
+.cta-final::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+.cta-inner{max-width:600px;margin:0 auto;position:relative;z-index:1;}
+.cta-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:20px;display:block;}
+.cta-h2{font-family:'Sora',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;color:#F0F4FF;letter-spacing:-.05em;line-height:1.1;margin-bottom:18px;}
+.cta-h2 em{font-style:normal;color:#60A5FA;}
+.cta-sub{font-size:16px;color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:40px;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.cta-input-wrap{
+  display:flex;align-items:center;gap:0;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:12px;overflow:hidden;max-width:440px;width:100%;
+}
+.cta-input{
+  flex:1;padding:15px 18px;background:none;border:none;outline:none;
+  font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;
+}
+.cta-input::placeholder{color:rgba(255,255,255,.3);}
+.cta-input-btn{
+  padding:12px 20px;background:var(--blue);border:none;color:#fff;
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:background .14s;white-space:nowrap;
+}
+.cta-input-btn:hover{background:var(--blue-dk);}
+.cta-note{font-size:12px;color:rgba(255,255,255,.25);margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer{
+  background:var(--ink);border-top:1px solid rgba(255,255,255,.06);
+  padding:28px;text-align:center;font-size:12px;color:#475569;
+}
+.footer a{color:#475569;}
+.footer a:hover{color:#94A3B8;}
+
+/* ══════════════════════════════════════
+   STICKY CTA MOBILE
+══════════════════════════════════════ */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;z-index:150;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);padding:12px 20px;
+  display:none;
+}
+.sticky-cta-btn{
+  width:100%;padding:14px;background:var(--blue);color:#fff;
+  border:none;border-radius:11px;font-family:'Sora',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;
+}
+
+
+/* IA section responsive */
+@media(max-width:768px){
+  .section-inner[style*="grid-template-columns:1fr 1fr"]{
+    display:flex!important;flex-direction:column;gap:40px;
+  }
+}
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.visible{opacity:1;transform:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:1024px){
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .benefits-inner{grid-template-columns:1fr 1fr;}
+  .benefit-item:nth-child(2){border-right:none;}
+  .benefit-item:nth-child(3){border-top:1px solid var(--border);}
+  .benefit-item:nth-child(4){border-top:1px solid var(--border);border-right:none;}
+  .usecases-grid{grid-template-columns:1fr;}
+  .trust-grid{grid-template-columns:1fr 1fr;}
+  .metrics-band{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .nav-burger{display:flex;}
+  .hero{padding:60px 20px 0;}
+  .section{padding:64px 20px;}
+  .how-section{padding:64px 20px;}
+  .trust-section{padding:64px 20px;}
+  .cta-final{padding:72px 20px;}
+  .why-grid{grid-template-columns:1fr;}
+  .benefits-inner{grid-template-columns:1fr;}
+  .benefit-item{border-right:none;border-bottom:1px solid var(--border);}
+  .benefit-item:last-child{border-bottom:none;}
+  .how-steps{grid-template-columns:1fr;}
+  .how-step-arrow{display:none;}
+  .mock-body{grid-template-columns:1fr;}
+  .mock-left{display:none;}
+  .trust-grid{grid-template-columns:1fr;}
+  .sticky-cta{display:block;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="6" width="5" height="20" rx="2" fill="#fff"/>
+          <rect x="13.5" y="6" width="5" height="9" rx="2" fill="#fff"/>
+          <rect x="13.5" y="17" width="5" height="9" rx="2" fill="rgba(255,255,255,.5)"/>
+          <rect x="23" y="6" width="5" height="20" rx="2" fill="#fff"/>
+        </svg>
+      </div>
+      <span class="logo-text">HERAKL</span>
+    </a>
+    <nav class="nav-links">
+      <a class="nav-link" href="#pourquoi">Le produit</a>
+      <a class="nav-link" href="#comment">Comment ça marche</a>
+      <a class="nav-link" href="#usages">Cas d'usage</a>
+    </nav>
+    <div class="nav-right">
+      <button class="btn-ghost-sm" onclick="window.location='herakl-auth.html?direct=1'">Connexion</button>
+      <button class="btn-cta-sm" onclick="window.location='herakl-onboarding.html'">
+        Analyser mon bien
+      </button>
+      <button class="nav-burger" id="nav-burger" onclick="document.getElementById('nav-mobile').classList.toggle('open')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="nav-mobile" style="display:none;background:#fff;border-top:1px solid var(--border);padding:16px 20px;">
+    <a class="nav-link" href="#pourquoi" style="display:block;margin-bottom:4px;">Le produit</a>
+    <a class="nav-link" href="#comment" style="display:block;margin-bottom:4px;">Comment ça marche</a>
+    <a class="nav-link" href="#usages" style="display:block;margin-bottom:12px;">Cas d'usage</a>
+    <button class="btn-cta-sm" style="width:100%;" onclick="window.location='herakl-onboarding.html'">Analyser mon bien</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      Nouveau — Analyse automatique de votre bien immobilier
+    </div>
+    <h1 class="hero-h1">
+      Découvrir le potentiel<br>réel de <em>votre bien.</em>
+    </h1>
+    <p class="hero-sub">
+      À partir de votre adresse, HERAKL analyse votre bien, estime sa valeur, identifie ses risques et vous montre comment le valoriser.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn-cta" onclick="window.location='herakl-onboarding.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        Analyser mon bien
+      </button>
+      <button class="btn-outline" onclick="window.location='herakl-view.html?demo=1'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+        Voir un exemple de dossier
+      </button>
+    </div>
+
+    <!-- MOCKUP DASHBOARD -->
+    <div class="hero-mockup">
+      <div class="mock-topbar">
+        <div class="mock-dot" style="background:#EF4444;"></div>
+        <div class="mock-dot" style="background:#F59E0B;"></div>
+        <div class="mock-dot" style="background:#10B981;"></div>
+        <div class="mock-url">herakl.fr/bien/15-rue-des-lilas-lyon</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-left">
+          <div class="mock-well-card">
+            <div class="mock-well-addr">15 rue des Lilas</div>
+            <div class="mock-well-meta">Lyon 69003 · Maison · 120 m²</div>
+            <div class="mock-dpe">
+              <span class="mock-dpe-letter">E</span>
+              <span class="mock-dpe-text">265 kWh/m²</span>
+            </div>
+          </div>
+          <div class="mock-score">
+            <svg class="mock-score-ring" viewBox="0 0 32 32">
+              <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3"/>
+              <circle cx="16" cy="16" r="13" fill="none" stroke="#3B82F6" stroke-width="3"
+                stroke-dasharray="81.7" stroke-dashoffset="32" stroke-linecap="round"
+                transform="rotate(-90 16 16)"/>
+            </svg>
+            <div>
+              <div class="mock-score-label">Score HERAKL</div>
+              <div class="mock-score-val">62%</div>
+            </div>
+          </div>
+          <div class="mock-nav-items">
+            <div class="mock-nav-item active">
+              <div class="mock-nav-dot"></div>Vue d'ensemble
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>Comprendre
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>Valoriser
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>Dossier
+            </div>
+          </div>
+        </div>
+        <div class="mock-right">
+          <!-- Score global -->
+          <div class="mock-card">
+            <div class="mock-card-head">
+              <div class="mock-card-title">Score HERAKL</div>
+              <div class="mock-badge blue">Bien moyen — optimisable</div>
+            </div>
+            <div class="mock-row"><span class="mock-label">Structure</span><div class="mock-bar"><div class="mock-bar-fill" style="width:72%;background:#4ADE80;"></div></div><span class="mock-val">72%</span></div>
+            <div class="mock-row"><span class="mock-label">Énergie · DPE E</span><div class="mock-bar"><div class="mock-bar-fill" style="width:38%;background:#F97316;"></div></div><span class="mock-val">38%</span></div>
+            <div class="mock-row"><span class="mock-label">Risques</span><div class="mock-bar"><div class="mock-bar-fill" style="width:65%;background:#60A5FA;"></div></div><span class="mock-val">65%</span></div>
+          </div>
+          <!-- Valeur estimée -->
+          <div class="mock-card">
+            <div class="mock-card-head">
+              <div class="mock-card-title">Valeur estimée</div>
+              <div class="mock-badge green">4 800 €/m²</div>
+            </div>
+            <div class="mock-row" style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+              <span class="mock-label" style="flex:1;">Estimation basse</span>
+              <span class="mock-val">540k €</span>
+            </div>
+            <div class="mock-row" style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+              <span class="mock-label" style="flex:1;">Estimation haute</span>
+              <span class="mock-val">622k €</span>
+            </div>
+            <div class="mock-row" style="padding:5px 0;">
+              <span class="mock-label" style="flex:1;color:rgba(74,222,128,.7);">Potentiel avec DPE C</span>
+              <span class="mock-val" style="color:#4ADE80;">+48k €</span>
+            </div>
+          </div>
+          <!-- Recommandation -->
+          <div class="mock-card">
+            <div class="mock-card-head">
+              <div class="mock-card-title">Priorité n°1</div>
+              <div class="mock-badge amber">🔴 Urgent</div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);line-height:1.5;padding:4px 0;">
+              Amélioration DPE E → C · Isolation + chauffage atteignable.
+              <span style="display:block;margin-top:5px;color:#4ADE80;font-weight:700;">Économie 620 €/an · Aide jusqu'à 10 000 €</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BANDE BÉNÉFICES ══ -->
+<div class="benefits-band">
+  <div class="benefits-inner">
+    <div class="benefit-item reveal">
+      <div class="benefit-icon" style="background:#FEF3C7;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div>
+        <div class="benefit-title">Comprendre mon bien</div>
+        <div class="benefit-sub">Score, DPE, valeur marché et risques en un coup d'œil</div>
+      </div>
+    </div>
+    <div class="benefit-item reveal" style="transition-delay:.06s;">
+      <div class="benefit-icon" style="background:var(--blue-lt);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div>
+        <div class="benefit-title">Identifier son potentiel</div>
+        <div class="benefit-sub">Extension possible, valorisation énergétique, gains estimés</div>
+      </div>
+    </div>
+    <div class="benefit-item reveal" style="transition-delay:.12s;">
+      <div class="benefit-icon" style="background:var(--green-lt);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="benefit-title">Savoir quoi faire</div>
+        <div class="benefit-sub">Recommandations priorisées par urgence et retour sur investissement</div>
+      </div>
+    </div>
+    <div class="benefit-item reveal" style="transition-delay:.18s;">
+      <div class="benefit-icon" style="background:#F5F3FF;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div>
+        <div class="benefit-title">Centraliser mon dossier</div>
+        <div class="benefit-sub">Documents, historique, collaborateurs — tout au même endroit</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POURQUOI HERAKL ══ -->
+<section class="section" id="pourquoi">
+  <div class="section-inner">
+    <span class="section-eyebrow reveal">Le produit</span>
+    <h2 class="section-h2 reveal">Votre bien, enfin <em>compris.</em></h2>
+    <p class="section-sub reveal">HERAKL transforme une adresse en dossier complet — valeur, potentiel, risques, histoire. Tout ce qu'un propriétaire devrait savoir.</p>
+
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-card-icon" style="background:#FEF3C7;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+        </div>
+        <div class="why-card-num">01</div>
+        <div class="why-card-title">Comprendre mon bien</div>
+        <div class="why-card-desc">Saisissez votre adresse. HERAKL calcule automatiquement la valeur de marché, le score global, l'énergie, les risques naturels et les règles d'urbanisme.</div>
+        <div class="why-card-tags">
+          <span class="tag">Score HERAKL</span>
+          <span class="tag">DPE estimé</span>
+          <span class="tag">Valeur marché</span>
+          <span class="tag">Risques</span>
+        </div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:.08s;">
+        <div class="why-card-icon" style="background:var(--blue-lt);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </div>
+        <div class="why-card-num">02</div>
+        <div class="why-card-title">Piloter mon bien</div>
+        <div class="why-card-desc">Recommandations priorisées, roadmap de valorisation, suivi des événements. Vous savez toujours quoi faire et dans quel ordre.</div>
+        <div class="why-card-tags">
+          <span class="tag">Priorités</span>
+          <span class="tag">Recommandations IA</span>
+          <span class="tag">Roadmap</span>
+        </div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:.16s;">
+        <div class="why-card-icon" style="background:var(--green-lt);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="why-card-num">03</div>
+        <div class="why-card-title">Valoriser mon bien</div>
+        <div class="why-card-desc">Valeur actuelle, potentiel d'extension PLU, gain DPE estimé — HERAKL vous montre combien votre bien peut valoir et comment y arriver.</div>
+        <div class="why-card-tags">
+          <span class="tag">Valeur marché</span>
+          <span class="tag">Factures</span>
+          <span class="tag">Plans</span>
+          <span class="tag">Admin</span>
+        </div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:.24s;">
+        <div class="why-card-icon" style="background:#F5F3FF;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="why-card-num">04</div>
+        <div class="why-card-title">Transmettre la mémoire du bien</div>
+        <div class="why-card-desc">À la revente, générez un accès sécurisé pour partager tout l'historique du bien avec l'acheteur, le notaire ou votre héritier.</div>
+        <div class="why-card-tags">
+          <span class="tag">Historique complet</span>
+          <span class="tag">Lien sécurisé</span>
+          <span class="tag">Revente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMENT ÇA MARCHE ══ -->
+<section class="how-section" id="comment">
+  <div class="how-inner">
+    <span class="how-eyebrow reveal">Comment ça marche</span>
+    <h2 class="how-h2 reveal">Une adresse.<br><em>Tout le reste est automatique.</em></h2>
+    <p class="how-sub reveal">Premiers résultats en moins d'une minute. Dossier complet disponible en quelques secondes.</p>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-num">01</div>
+        <div class="how-step-icon" style="background:rgba(37,99,235,.15);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="how-step-title">Saisissez votre adresse</div>
+        <div class="how-step-desc">Rien d'autre. HERAKL identifie votre bien et récupère automatiquement les données publiques disponibles.</div>
+        <div class="how-step-arrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="how-step reveal" style="transition-delay:.1s;">
+        <div class="how-step-num">02</div>
+        <div class="how-step-icon" style="background:rgba(22,163,74,.15);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="how-step-title">HERAKL analyse automatiquement</div>
+        <div class="how-step-desc">Score global, valeur estimée, DPE, risques naturels, potentiel PLU — tout est calculé et synthétisé sans aucune action de votre part.</div>
+        <div class="how-step-arrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="how-step reveal" style="transition-delay:.2s;">
+        <div class="how-step-num">03</div>
+        <div class="how-step-icon" style="background:rgba(139,92,246,.15);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="how-step-title">Accédez à votre dossier</div>
+        <div class="how-step-desc">Consultez vos recommandations, suivez l'évolution de votre bien, enrichissez votre dossier et partagez-le à qui vous voulez.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SECTION IA ══ -->
+<section class="section" style="background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 28px;">
+  <div class="section-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <div>
+      <span class="section-eyebrow reveal">Intelligence automatique</span>
+      <h2 class="section-h2 reveal" style="max-width:440px;">HERAKL analyse.<br><em>Vous décidez.</em></h2>
+      <p class="section-sub reveal" style="margin-bottom:32px;">Pas besoin de chercher les données. HERAKL les agrège pour vous depuis les sources officielles et génère une analyse complète en quelques secondes.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="reveal" style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:var(--amber-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div><div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;">Marché immobilier</div><div style="font-size:12.5px;color:var(--sec);">Prix au m², tension du marché, tendance locale — données DVF et transactions récentes.</div></div>
+        </div>
+        <div class="reveal" style="transition-delay:.06s;display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+          </div>
+          <div><div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;">Énergie &amp; DPE</div><div style="font-size:12.5px;color:var(--sec);">Classe énergétique estimée, consommation, impact sur la valeur et aides disponibles.</div></div>
+        </div>
+        <div class="reveal" style="transition-delay:.12s;display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:var(--green-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;">Risques naturels</div><div style="font-size:12.5px;color:var(--sec);">Inondation, sismicité, argile, radon — données Géorisques officielles par coordonnées GPS.</div></div>
+        </div>
+        <div class="reveal" style="transition-delay:.18s;display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div><div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;">Potentiel du bien</div><div style="font-size:12.5px;color:var(--sec);">Extension possible, surélévation, division parcellaire — règles PLU analysées par zone.</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Mini-résultat simulé côté droit -->
+    <div class="reveal" style="background:var(--ink);border-radius:16px;padding:24px;box-shadow:0 16px 48px rgba(15,23,42,.2);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;">Résultat automatique · 15 rue des Lilas, Lyon</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px;">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Score global</div>
+          <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:#60A5FA;letter-spacing:-.04em;line-height:1;">68%</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">Bien moyen · optimisable</div>
+        </div>
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px;">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Valeur estimée</div>
+          <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#F0F4FF;letter-spacing:-.03em;line-height:1.2;">540k – 622k&nbsp;€</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">4 800 €/m² · Lyon</div>
+        </div>
+      </div>
+      <div style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);border-radius:9px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:9px;font-family:'DM Mono',monospace;color:#F97316;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">🔴 Priorité n°1 — Urgent</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);">Améliorer DPE E → C · Économie 620 €/an · Aide jusqu'à 10 000 €</div>
+      </div>
+      <div style="background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.15);border-radius:9px;padding:12px;">
+        <div style="font-size:9px;font-family:'DM Mono',monospace;color:#4ADE80;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">📈 Potentiel identifié</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);">Extension +30 m² possible (PLU zone UC) · +180k € de valeur</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CAS D'USAGE ══ -->
+<section class="section" id="usages">
+  <div class="section-inner">
+    <span class="section-eyebrow reveal">Cas d'usage</span>
+    <h2 class="section-h2 reveal">Votre situation,<br><em>vos questions.</em></h2>
+    <p class="section-sub reveal">Que vous soyez occupant, investisseur ou vendeur, HERAKL répond à vos vraies questions.</p>
+    <div class="usecases-grid">
+      <div class="usecase-card reveal">
+        <div class="usecase-pill" style="background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue-mid);">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Comprendre
+        </div>
+        <div class="usecase-title">Comprendre la valeur réelle de mon bien</div>
+        <div class="usecase-desc">Vous ne savez pas vraiment ce que vaut votre bien ni ce qu'il vaut vraiment. HERAKL vous donne une réponse claire en moins d'une minute.</div>
+        <div class="usecase-list">
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--green-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Valeur estimée et fourchette marché
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--green-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Score HERAKL et analyse DPE automatique
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--green-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Risques naturels et contraintes d'urbanisme
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card reveal" style="transition-delay:.08s;">
+        <div class="usecase-pill" style="background:var(--amber-lt);color:var(--amber);border:1px solid #FDE68A;">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          Valoriser
+        </div>
+        <div class="usecase-title">Savoir comment valoriser mon bien</div>
+        <div class="usecase-desc">Vous voulez maximiser la valeur de votre bien avant une vente, une mise en location ou simplement pour optimiser votre patrimoine.</div>
+        <div class="usecase-list">
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--amber-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Potentiel de valorisation estimé en €
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--amber-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Recommandations priorisées par ROI
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:var(--amber-lt);">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Aides disponibles selon votre profil
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card reveal" style="transition-delay:.16s;">
+        <div class="usecase-pill" style="background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE;">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Revente &amp; transmission
+        </div>
+        <div class="usecase-title">Préparer une vente ou une transmission</div>
+        <div class="usecase-desc">Vous vendez votre bien ou souhaitez le transmettre. HERAKL génère un dossier complet, horodaté et partageable en un clic.</div>
+        <div class="usecase-list">
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:#F5F3FF;">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Historique complet du bien
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:#F5F3FF;">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Accès sécurisé pour acheteur ou notaire
+          </div>
+          <div class="usecase-item">
+            <div class="usecase-check" style="background:#F5F3FF;">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            Score HERAKL valorisant à la vente
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RÉASSURANCE ══ -->
+<section class="trust-section">
+  <div class="trust-inner">
+    <div style="text-align:center;">
+      <span class="section-eyebrow reveal" style="display:inline-block;">Pourquoi nous faire confiance</span>
+      <h2 class="section-h2 reveal" style="margin:0 auto 0;text-align:center;max-width:none;">Un dossier <em>privé et sécurisé.</em></h2>
+    </div>
+    <div class="metrics-band reveal">
+      <div class="metric">
+        <div class="metric-val">+3 200</div>
+        <div class="metric-label">biens analysés</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">4,8/5</div>
+        <div class="metric-label">note utilisateurs</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">&lt; 5 min</div>
+        <div class="metric-label">pour créer son dossier</div>
+      </div>
+    </div>
+    <div class="trust-grid" style="margin-top:20px;">
+      <div class="trust-card reveal">
+        <div class="trust-icon" style="background:var(--blue-lt);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="trust-title">Données sécurisées</div>
+        <div class="trust-desc">Vos données sont chiffrées et jamais revendues à des tiers.</div>
+      </div>
+      <div class="trust-card reveal" style="transition-delay:.06s;">
+        <div class="trust-icon" style="background:var(--green-lt);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="trust-title">Sans engagement</div>
+        <div class="trust-desc">Créez votre dossier gratuitement. Sans carte bancaire requise.</div>
+      </div>
+      <div class="trust-card reveal" style="transition-delay:.12s;">
+        <div class="trust-icon" style="background:#FEF3C7;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="trust-title">Support dédié</div>
+        <div class="trust-desc">Équipe disponible pour vous accompagner sur chaque étape.</div>
+      </div>
+      <div class="trust-card reveal" style="transition-delay:.18s;">
+        <div class="trust-icon" style="background:#F5F3FF;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="trust-title">Données officielles</div>
+        <div class="trust-desc">PLU, DPE, données cadastrales — sources publiques vérifiées.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══ -->
+<section class="cta-final">
+  <div class="cta-inner">
+    <span class="cta-eyebrow reveal">Commencer maintenant — gratuit</span>
+    <h2 class="cta-h2 reveal">Analysez votre bien<br><em>gratuitement.</em></h2>
+    <p class="cta-sub reveal">Adresse, estimation, potentiel, risques : premiers résultats en moins d'une minute.</p>
+    <div class="reveal" style="transition-delay:.1s;">
+      <div class="cta-input-wrap">
+        <input class="cta-input" type="text" placeholder="15 rue des Lilas, Lyon 69003…" id="cta-addr"/>
+        <button class="cta-input-btn" onclick="launchWithAddr()">Analyser mon bien →</button>
+      </div>
+      <div class="cta-note">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Gratuit · Sans inscription requise · Résultats immédiats
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  © 2025 HERAKL —
+  <a href="#">Mentions légales</a> ·
+  <a href="#">Confidentialité</a> ·
+  <a href="#">Contact</a>
+</footer>
+
+<!-- Sticky CTA mobile -->
+<div class="sticky-cta" id="sticky-cta">
+  <button class="sticky-cta-btn" onclick="window.location='herakl-onboarding.html'">
+    Analyser mon bien — Gratuit
+  </button>
+</div>
+
+<script>
+/* ── Navbar scroll ── */
+window.addEventListener('scroll', function(){
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  /* Sticky mobile CTA */
+  var sticky = document.getElementById('sticky-cta');
+  if(sticky) sticky.style.display = window.scrollY > 400 ? 'block' : 'none';
+});
+
+/* ── Mobile nav toggle ── */
+var mob = document.getElementById('nav-mobile');
+if(mob){
+  document.querySelectorAll('#nav-mobile .nav-link').forEach(function(l){
+    l.addEventListener('click', function(){ mob.style.display = 'none'; });
+  });
+}
+
+/* ── Reveal on scroll ── */
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(e){ e.classList.add('visible'); }); return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  },{threshold:0.08});
+  els.forEach(function(e){ io.observe(e); });
+})();
+
+/* ── CTA avec adresse ── */
+function launchWithAddr() {
+  var addr = document.getElementById('cta-addr').value.trim();
+  var url = 'herakl-onboarding.html';
+  if(addr) url += '?adresse=' + encodeURIComponent(addr);
+  window.location.href = url;
+}
+document.getElementById('cta-addr').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') launchWithAddr();
+});
+
+/* ── Smooth scroll pour liens d'ancre ── */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    var target = document.querySelector(a.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+</script>
+</body>
+</html>
