@@ -1,0 +1,26 @@
+{
+  "name": "herakl-app",
+  "version": "1.0.0",
+  "description": "HERAKL - Digital property dossier platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "real-estate",
+    "property",
+    "analysis",
+    "valuation"
+  ],
+  "author": "HERAKL",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "terser": "^5.46.1",
+    "vite": "^5.0.0"
+  }
+}
