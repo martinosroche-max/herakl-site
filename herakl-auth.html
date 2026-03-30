@@ -9,472 +9,283 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;600&family=DM+Sans:wght@400;500;600&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-mid:#DBEAFE;--blue-dk:#1D4ED8;
-  --ink:#0F172A;--ink2:#1E293B;--sec:#64748B;--muted:#94A3B8;
-  --border:#E2E8F0;--bg:#F8FAFC;--card:#fff;
-  --green:#16A34A;--green-lt:#DCFCE7;
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-dk:#1D4ED8;
+  --ink:#0F172A;--sec:#64748B;--muted:#94A3B8;
+  --border:#E2E8F0;--card:#fff;--green:#16A34A;--red:#EF4444;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
-body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased;min-height:100vh;}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;display:flex;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;}
 
-/* LAYOUT */
-.auth-wrap{display:grid;grid-template-columns:480px 400px;min-height:100vh;width:100%;max-width:900px;margin:0 auto;}
+/* LEFT */
+.auth-left{display:flex;flex-direction:column;padding:52px 64px;background:#fff;border-right:1px solid var(--border);}
+.al-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.al-logo-text{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.03em;}
+.al-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:48px 0;}
+.al-tagline{font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.16em;margin-bottom:24px;}
+.al-title{font-family:'Sora',sans-serif;font-size:clamp(34px,4vw,54px);font-weight:800;color:var(--ink);letter-spacing:-.05em;line-height:.95;margin-bottom:24px;}
+.al-title em{font-style:normal;color:var(--blue);}
+.al-sub{font-size:15px;color:var(--ink);line-height:1.7;max-width:320px;margin-bottom:48px;}
+.al-piliers{display:flex;flex-direction:column;border-top:1px solid var(--border);}
+.al-pilier{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);transition:opacity .2s;}
+.al-pilier-icon{flex-shrink:0;color:var(--muted);}
+.al-pilier-txt{font-size:13px;color:var(--sec);font-weight:500;}
+.al-footer{padding-top:32px;font-size:11px;color:var(--muted);}
+.al-pilier:nth-child(2){opacity:.7;}
+.al-pilier:nth-child(3){opacity:.45;}
+.al-pilier:nth-child(4){opacity:.25;}
 
-/* LEFT — récap bien */
-.auth-left{
-  background:linear-gradient(160deg,#080F1E 0%,#0C1A30 60%,#0A1628 100%);
-  display:flex;flex-direction:column;justify-content:center;padding:52px 48px;position:relative;overflow:hidden;
-}
-.auth-left::before{content:'';position:absolute;top:-80px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.14) 0%,transparent 65%);pointer-events:none;}
-.al-logo{display:flex;align-items:center;gap:8px;margin-bottom:48px;}
-.al-logo-box{width:28px;height:28px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;}
-.al-logo-text{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;letter-spacing:-.025em;}
+/* RIGHT */
+.auth-right{display:flex;flex-direction:column;justify-content:center;padding:52px 64px;background:#FAFAFA;}
 
-.al-eyebrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:#4B7DC8;text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;}
-.al-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.15;margin-bottom:8px;}
-.al-sub{font-size:13px;color:#7A9BC0;line-height:1.6;margin-bottom:32px;}
+/* Tabs */
+.mode-tabs{display:flex;margin-bottom:32px;border:1.5px solid var(--border);border-radius:12px;padding:4px;background:#fff;}
+.mode-tab{flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .15s;text-align:center;}
+.mode-tab.active{background:var(--ink);color:#fff;}
 
-/* Bien card preview */
-.bien-preview{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;}
-.bp-eyebrow{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
-.bp-addr{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;letter-spacing:-.03em;margin-bottom:3px;}
-.bp-meta{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:14px;}
-.bp-score-row{display:flex;align-items:center;gap:12px;}
-.bp-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
-.bp-ring svg{width:100%;height:100%;}
-.bp-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;color:#fff;}
-.bp-info{}
-.bp-score-lbl{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
-.bp-score-val{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:#fff;}
-.bp-synth{font-size:11.5px;color:rgba(255,255,255,.4);margin-top:8px;line-height:1.55;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);}
-
-/* Valeur estimée */
-.bp-valeur{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.2);border-radius:8px;}
-.bp-valeur-lbl{font-size:11px;color:rgba(255,255,255,.4);}
-.bp-valeur-val{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#4ADE80;margin-left:auto;}
-
-/* RIGHT — form connexion */
-.auth-right{display:flex;flex-direction:column;justify-content:center;padding:52px 48px;background:var(--card);border-left:1px solid var(--border);}
-
-.ar-eyebrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;}
-.ar-title{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.04em;margin-bottom:8px;line-height:1.1;}
-.ar-sub{font-size:14px;color:var(--sec);line-height:1.55;margin-bottom:32px;}
+.ar-title{font-family:'Sora',sans-serif;font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--ink);letter-spacing:-.04em;line-height:1.05;margin-bottom:6px;}
+.ar-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
 
 /* Boutons social */
-.btn-social{
-  display:flex;align-items:center;gap:12px;width:100%;
-  padding:14px 20px;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink);
-  background:var(--card);border:1.5px solid var(--border);cursor:pointer;
-  transition:all .14s;margin-bottom:10px;text-align:left;
-}
-.btn-social:hover{border-color:var(--blue);background:var(--blue-lt);}
-.btn-social:hover .bs-label{color:var(--blue);}
-.bs-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.bs-label{flex:1;font-size:14px;font-weight:600;}
-.bs-arrow{color:var(--muted);font-size:14px;transition:transform .14s;}
-.btn-social:hover .bs-arrow{transform:translateX(3px);}
+.btn-social{display:flex;align-items:center;gap:0;width:100%;padding:14px 18px;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--border);cursor:pointer;transition:all .14s;margin-bottom:10px;position:relative;}
+.btn-social:hover{border-color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.bs-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:absolute;left:18px;}
+.bs-label{flex:1;font-size:14px;font-weight:600;text-align:center;}
+.bs-arrow{color:var(--muted);transition:transform .14s;position:absolute;right:18px;}
+.btn-social:hover .bs-arrow{transform:translateX(3px);color:var(--ink);}
 
-/* Séparateur */
-.divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted);font-size:12.5px;}
+/* Divider */
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--sec);font-size:12px;font-weight:500;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* Form email */
-.field{margin-bottom:14px;}
-.field-label{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:var(--sec);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;display:block;}
-.field-input{
-  width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:11px;
-  font-family:'DM Sans',sans-serif;font-size:14.5px;color:var(--ink);
-  background:var(--card);outline:none;transition:border-color .15s,box-shadow .15s;
-}
-.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08);}
-.field-input::placeholder{color:var(--muted);}
-.field-hint{font-size:11.5px;color:var(--muted);margin-top:5px;}
+/* Champs */
+.field{margin-bottom:10px;}
+.field label{font-size:12px;font-weight:600;color:var(--ink);display:block;margin-bottom:5px;}
+.field input{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;background:#fff;}
+.field input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(15,23,42,.06);}
+.field input::placeholder{color:var(--muted);}
+.field input.err{border-color:var(--red);}
+.name-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 
-/* Name row (2 cols) */
-.name-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* Panels */
+.auth-panel{display:none;}
+.auth-panel.active{display:block;animation:fadeIn .2s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
 /* Submit */
-.btn-submit{
-  width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:12px;
-  font-family:'Sora',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;
-  transition:all .14s;box-shadow:0 3px 12px rgba(37,99,235,.22);margin-top:6px;
-}
-.btn-submit:hover{background:var(--blue-dk);transform:translateY(-1px);}
-
-.auth-footer{margin-top:20px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.6;}
+.btn-submit{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:12px;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .14s;display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+.btn-submit:hover{background:#1E293B;}
+.btn-arrow{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.auth-footer{margin-top:16px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.8;}
 .auth-footer a{color:var(--blue);text-decoration:none;}
 .auth-footer a:hover{text-decoration:underline;}
 
-/* Panel email */
-#email-form{display:none;}
-#email-form.show{display:block;animation:fadeIn .2s ease both;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
-/* Loading state */
-.btn-submit.loading{opacity:.7;cursor:wait;}
-.btn-submit.loading::after{content:' ...';font-size:12px;opacity:.6;}
-
-/* Mobile */
 @media(max-width:820px){
-  .auth-wrap{grid-template-columns:1fr;max-width:480px;}
+  .auth-wrap{grid-template-columns:1fr;}
   .auth-left{display:none;}
-  .auth-right{border-left:none;padding:36px 24px;}
-  body{align-items:flex-start;}
+  .auth-right{background:#fff;padding:40px 24px;}
 }
 </style>
 </head>
 <body>
-
 <div class="auth-wrap">
 
-  <!-- ══ LEFT — Récap bien ══ -->
+  <!-- LEFT -->
   <div class="auth-left">
-    <div class="al-logo">
-      <div class="al-logo-box">
-        <svg width="13" height="13" viewBox="0 0 32 32" fill="none">
-          <rect x="4" y="6" width="5" height="20" rx="2" fill="#3B82F6"/>
-          <rect x="13.5" y="6" width="5" height="9" rx="2" fill="#3B82F6"/>
-          <rect x="13.5" y="17" width="5" height="9" rx="2" fill="rgba(147,197,253,.6)"/>
-          <rect x="23" y="6" width="5" height="20" rx="2" fill="#3B82F6"/>
-        </svg>
-      </div>
+    <a class="al-logo" href="herakl-landing.html">
+      <img src="data:image/png;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH/2Q==" width="44" height="44" alt="HERAKL" style="display:block;flex-shrink:0;">
       <span class="al-logo-text">HERAKL</span>
-    </div>
-
-    <div class="al-eyebrow">Votre dossier est pr&#234;t</div>
-    <h2 class="al-title">Sauvegardez<br>votre bien.</h2>
-    <p class="al-sub">Connectez-vous pour retrouver votre bien &#224; tout moment et acc&#233;der &#224; votre dashboard complet.</p>
-
-    <!-- Bien analysé -->
-    <div class="bien-preview" id="bien-preview">
-      <div class="bp-eyebrow">Bien analys&#233;</div>
-      <div class="bp-addr" id="bp-addr">Chargement&#8230;</div>
-      <div class="bp-meta" id="bp-meta">&#8212;</div>
-      <div class="bp-score-row">
-        <div class="bp-ring">
-          <svg viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="4"/>
-            <circle id="bp-score-ring" cx="24" cy="24" r="20" fill="none" stroke="#60A5FA" stroke-width="4"
-              stroke-dasharray="125.7" stroke-dashoffset="125.7"
-              stroke-linecap="round" transform="rotate(-90 24 24)"/>
-          </svg>
-          <div class="bp-ring-num" id="bp-score-num">&#8212;</div>
+    </a>
+    <div class="al-body">
+      <div class="al-tagline">Dossier numérique immobilier</div>
+      <h2 class="al-title">Votre bien.<br>Votre <em>dossier.</em><br>Votre actif.</h2>
+      <p class="al-sub">HERAKL transforme chaque bien immobilier en un actif clair, structuré et pilotable.</p>
+      <div class="al-piliers">
+        <div class="al-pilier">
+          <div class="al-pilier-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <span class="al-pilier-txt">Comprendre votre bien</span>
         </div>
-        <div class="bp-info">
-          <div class="bp-score-lbl">Score HERAKL</div>
-          <div class="bp-score-val" id="bp-score-val">Analyse compl&#232;te</div>
+        <div class="al-pilier">
+          <div class="al-pilier-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg></div>
+          <span class="al-pilier-txt">Piloter dans le temps</span>
+        </div>
+        <div class="al-pilier">
+          <div class="al-pilier-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <span class="al-pilier-txt">Valoriser le potentiel</span>
+        </div>
+        <div class="al-pilier">
+          <div class="al-pilier-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+          <span class="al-pilier-txt">Transmettre en confiance</span>
         </div>
       </div>
-      <div class="bp-valeur" id="bp-valeur" style="display:none;">
-        <div class="bp-valeur-lbl">Valeur estim&#233;e</div>
-        <div class="bp-valeur-val" id="bp-valeur-val">&#8212;</div>
-      </div>
-      <div class="bp-synth" id="bp-synth">Votre dossier sera sauvegard&#233; d&#232;s votre connexion.</div>
     </div>
+    <div class="al-footer">Plus votre dossier est complet, plus votre bien est valorisé.</div>
   </div>
 
-  <!-- ══ RIGHT — Auth form ══ -->
+  <!-- RIGHT -->
   <div class="auth-right">
-    <div class="ar-eyebrow">Connexion</div>
-    <h1 class="ar-title">Cr&#233;ez votre<br>espace HERAKL</h1>
-    <p class="ar-sub">Sauvegardez votre dossier et acc&#233;dez &#224; votre dashboard &#224; tout moment.</p>
 
-    <!-- Bouton Google -->
-    <button class="btn-social" onclick="authGoogle()">
-      <div class="bs-icon">
-        <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
-          <path d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5 12.7 4.5 3.5 13.7 3.5 25S12.7 45.5 24 45.5c11 0 20.3-9 20.3-20.3 0-1.2-.1-2.5-.2-3.7z" fill="#FFC107"/>
-          <path d="M6.3 14.7l6.6 4.8C14.5 16.2 18.9 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5c-7.5 0-14 4.3-17.7 10.2z" fill="#FF3D00"/>
-          <path d="M24 45.5c5.2 0 10-2 13.6-5.1l-6.3-5.3c-2 1.4-4.5 2.3-7.3 2.3-5.3 0-9.7-3.3-11.4-7.9l-6.5 5c3.7 6 10.2 11 17.9 11z" fill="#4CAF50"/>
-          <path d="M43.6 20.5H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4.1 5.1l6.3 5.3C37.3 39 43.5 33 43.5 25c0-1.2-.1-2.5-.2-3.7z" fill="#1976D2"/>
-        </svg>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-login" onclick="switchMode('login')">Se connecter</button>
+      <button class="mode-tab" id="tab-signup" onclick="switchMode('signup')">Créer un compte</button>
+    </div>
+
+    <!-- Connexion -->
+    <div class="auth-panel active" id="panel-login">
+      <div class="ar-title">Bon retour<br>sur HERAKL</div>
+      <div class="ar-sub">Accédez à votre dossier en un clic.</div>
+      <button class="btn-social" onclick="authGoogle()">
+        <div class="bs-icon"><svg width="18" height="18" viewBox="0 0 48 48" fill="none"><path d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5 12.7 4.5 3.5 13.7 3.5 25S12.7 45.5 24 45.5c11 0 20.3-9 20.3-20.3 0-1.2-.1-2.5-.2-3.7z" fill="#FFC107"/><path d="M6.3 14.7l6.6 4.8C14.5 16.2 18.9 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5c-7.5 0-14 4.3-17.7 10.2z" fill="#FF3D00"/><path d="M24 45.5c5.2 0 10-2 13.6-5.1l-6.3-5.3c-2 1.4-4.5 2.3-7.3 2.3-5.3 0-9.7-3.3-11.4-7.9l-6.5 5c3.7 6 10.2 11 17.9 11z" fill="#4CAF50"/><path d="M43.6 20.5H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4.1 5.1l6.3 5.3C37.3 39 43.5 33 43.5 25c0-1.2-.1-2.5-.2-3.7z" fill="#1976D2"/></svg></div>
+        <span class="bs-label">Continuer avec Google</span>
+        <span class="bs-arrow">→</span>
+      </button>
+      <div class="divider">ou par email</div>
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" placeholder="marie@exemple.fr" autocomplete="email"/>
       </div>
-      <span class="bs-label">Continuer avec Google</span>
-      <span class="bs-arrow">&#8594;</span>
-    </button>
-
-    <!-- Bouton Email -->
-    <button class="btn-social" onclick="showEmailForm()">
-      <div class="bs-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2 8 12 14 22 8"/></svg>
+      <div class="field">
+        <label for="login-password">Mot de passe</label>
+        <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+        <div style="text-align:right;margin-top:5px;"><a href="#" style="font-size:11px;color:var(--blue);text-decoration:none;">Mot de passe oublié ?</a></div>
       </div>
-      <span class="bs-label">Continuer avec mon email</span>
-      <span class="bs-arrow">&#8594;</span>
-    </button>
+      <button class="btn-submit" onclick="authLogin()">
+        <span>Accéder à mon espace</span>
+        <span class="btn-arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </button>
+      <div class="auth-footer">
+        Pas encore de compte ? <a href="#" onclick="switchMode('signup');return false;">Créer un compte</a><br>
+        <a href="#">CGU</a> · <a href="#">Confidentialité</a>
+      </div>
+    </div>
 
-    <!-- Form email (masqué par défaut) -->
-    <div id="email-form">
-      <div class="divider">ou remplissez le formulaire</div>
+    <!-- Inscription -->
+    <div class="auth-panel" id="panel-signup">
+      <div class="ar-title">Créez votre<br>espace HERAKL</div>
+      <div class="ar-sub">Prêt en 30 secondes. Votre premier bien vous attend.</div>
+      <button class="btn-social" onclick="authGoogle()">
+        <div class="bs-icon"><svg width="18" height="18" viewBox="0 0 48 48" fill="none"><path d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5 12.7 4.5 3.5 13.7 3.5 25S12.7 45.5 24 45.5c11 0 20.3-9 20.3-20.3 0-1.2-.1-2.5-.2-3.7z" fill="#FFC107"/><path d="M6.3 14.7l6.6 4.8C14.5 16.2 18.9 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.7 29.3 4.5 24 4.5c-7.5 0-14 4.3-17.7 10.2z" fill="#FF3D00"/><path d="M24 45.5c5.2 0 10-2 13.6-5.1l-6.3-5.3c-2 1.4-4.5 2.3-7.3 2.3-5.3 0-9.7-3.3-11.4-7.9l-6.5 5c3.7 6 10.2 11 17.9 11z" fill="#4CAF50"/><path d="M43.6 20.5H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4.1 5.1l6.3 5.3C37.3 39 43.5 33 43.5 25c0-1.2-.1-2.5-.2-3.7z" fill="#1976D2"/></svg></div>
+        <span class="bs-label">Continuer avec Google</span>
+        <span class="bs-arrow">→</span>
+      </button>
+      <div class="divider">ou par email</div>
       <div class="name-row">
         <div class="field">
-          <label class="field-label" for="f-prenom">Pr&#233;nom</label>
-          <input class="field-input" id="f-prenom" type="text" placeholder="Marie" autocomplete="given-name"/>
+          <label for="su-prenom">Prénom</label>
+          <input id="su-prenom" type="text" placeholder="Marie" autocomplete="given-name"/>
         </div>
         <div class="field">
-          <label class="field-label" for="f-nom">Nom</label>
-          <input class="field-input" id="f-nom" type="text" placeholder="Dupont" autocomplete="family-name"/>
+          <label for="su-nom">Nom</label>
+          <input id="su-nom" type="text" placeholder="Dupont" autocomplete="family-name"/>
         </div>
       </div>
       <div class="field">
-        <label class="field-label" for="f-email">Email</label>
-        <input class="field-input" id="f-email" type="email" placeholder="marie@exemple.fr" autocomplete="email"/>
-        <div class="field-hint">Nous ne partageons jamais votre email.</div>
+        <label for="su-email">Email</label>
+        <input id="su-email" type="email" placeholder="marie@exemple.fr" autocomplete="email"/>
       </div>
-      <button class="btn-submit" id="btn-submit" onclick="authEmail()">
-        Acc&#233;der &#224; mon dashboard
+      <button class="btn-submit" onclick="authSignup()">
+        <span>Créer mon espace</span>
+        <span class="btn-arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></span>
       </button>
+      <div class="auth-footer">
+        Déjà un compte ? <a href="#" onclick="switchMode('login');return false;">Se connecter</a><br>
+        <a href="#">CGU</a> · <a href="#">Confidentialité</a>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <div class="auth-footer">
-      En continuant, vous acceptez nos <a href="#">Conditions d&rsquo;utilisation</a>
-      et notre <a href="#">Politique de confidentialit&#233;</a>.<br>
-      D&#233;j&#224; un compte ? <a href="#" onclick="authGoogle()">Se connecter</a>
-    </div>
   </div>
-
 </div>
 
 <script>
-
-/* ══════════════════════════════════════════════════════════════
-   HERAKL AUTH v4
-   Niveaux d'accès : preview → restricted → full
-   Flux : pendingBien → login → accès restricted
-          → vérification bien → accès full → dashboard
-══════════════════════════════════════════════════════════════ */
-
 var HK={
   get:function(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}},
   set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},
   del:function(k){try{localStorage.removeItem(k);}catch(e){}}
 };
 function uid(p){return (p||'hk')+'_'+Math.random().toString(36).slice(2,10);}
-function fmtK(n){return n?Math.round(n/1000)+'k \u20ac':'\u2014';}
-function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 
-/* ─── Session ─── */
-function getSession(){return HK.get('herakl_session');}
-function saveSession(s){HK.set('herakl_session',s);return s;}
-function getCurrentBien(){return HK.get('herakl_bien');}
-function setCurrentBien(b){HK.set('herakl_bien',b);}
+/* ── Destination découplée ── */
+var _params = new URLSearchParams(window.location.search);
+var _next   = _params.get('next') || 'herakl-dashboard.html';
+var _mode   = _params.get('mode') || 'login';
 
-/* ─── Attacher pending bien + passer à restricted ─── */
-function attachPendingBienToSession(session){
-  var pending=HK.get('herakl_pending_bien');
-  if(!pending)return null;
-  var userBiens=HK.get('herakl_user_biens')||[];
-  var ba=(pending.adresse&&pending.adresse.full)||(typeof pending.adresse==='string'?pending.adresse:'');
-  var exists=userBiens.some(function(b){
-    var a=(b.adresse&&b.adresse.full)||(typeof b.adresse==='string'?b.adresse:'');
-    var bt=(b.bien&&b.bien.type)||(b.type)||'';
-    var pt=(pending.bien&&pending.bien.type)||(pending.type)||'';
-    return a&&ba&&a.toLowerCase()===ba.toLowerCase()&&bt===pt;
-  });
-  if(!exists){
-    pending.id=pending.id||uid('bien');
-    pending.userId=session.id;
-    pending.userEmail=session.email;
-    /* Passer à restricted après login */
-    if(!pending.access)pending.access={level:'restricted'};
-    else pending.access.level='restricted';
-    userBiens.unshift(pending);
-    HK.set('herakl_user_biens',userBiens);
+function redirect(isNew) {
+  var pending = HK.get('herakl_pending_bien');
+  if (pending) {
+    window.location.href = _next;
+  } else if (isNew) {
+    window.location.href = 'herakl-onboarding.html';
+  } else {
+    window.location.href = _next;
   }
-  setCurrentBien(pending);
-  HK.del('herakl_pending_bien');
-  return pending;
 }
 
-/* ─── État initial ─── */
-var pendingBien=HK.get('herakl_pending_bien');
-var directMode=new URLSearchParams(window.location.search).get('direct')==='1';
-
-(function checkAutoLogin(){
-  var session=getSession();
-  /* Si session active ET pas de pendingBien → dashboard (vérifie accès là-bas) */
-  if(session&&!pendingBien){window.location.href='herakl-dashboard.html';return;}
-  fillPreview();
+(function(){
+  var session = HK.get('herakl_session');
+  var pending = HK.get('herakl_pending_bien');
+  /* Pas de redirection auto — l'utilisateur doit se connecter explicitement */
+  if (_mode === 'signup') switchMode('signup');
 })();
 
-/* ─── Récap du bien ─── */
-function fillPreview(){
-  if(!pendingBien){document.getElementById('bien-preview').style.opacity='0.4';setText('bp-addr','Aucun bien en attente');setText('bp-meta','Connectez-vous pour accéder à vos biens');return;}
-  var r=pendingBien;
-  var tl={maison:'Maison',appartement:'Appartement',immeuble:'Immeuble',terrain:'Terrain'}[(r.bien&&r.bien.type)||(r.type)]||'Bien';
-  var sc=(r&&r.analyse&&r.analyse.scoreGlobal)||0;
-  var addr=r.adresse||{};
-  setText('bp-addr',(addr&&(addr.street||addr.full))||'Adresse non renseignée');
-  setText('bp-meta',tl+' · '+((r.bien&&r.bien.surface)||'?')+' m²'+(addr.city?' · '+addr.city:''));
-  setText('bp-score-num',sc+'%');
-  setText('bp-score-val',sc>=80?'Excellent':sc>=65?'Bien valorisé':sc>=50?'Bien moyen':'À améliorer');
-  setText('bp-synth',(r.analyse&&r.analyse.synthese)||'Analyse disponible dans le dashboard.');
-  var ctx=r.contexte||{};
-  if(ctx.valeurBasse&&ctx.valeurHaute){var vEl=document.getElementById('bp-valeur');if(vEl)vEl.style.display='flex';setText('bp-valeur-val',fmtK(ctx.valeurBasse)+' – '+fmtK(ctx.valeurHaute));}
-  var dpeE=r.energie||{};
-  if(dpeE.dpe){var dEl=document.getElementById('bp-dpe');if(dEl){dEl.style.display='inline-flex';dEl.textContent='DPE '+dpeE.dpe+(dpeE.dpeEstime?' (estimé)':' (vérifié)');}}
-  var ring=document.getElementById('bp-score-ring'),circ=125.7;
-  if(ring){setTimeout(function(){ring.style.transition='stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1)';ring.style.strokeDashoffset=circ-(sc/100)*circ;ring.setAttribute('stroke',sc>=75?'#4ADE80':sc>=55?'#60A5FA':'#FCD34D');},200);}
+function switchMode(mode){
+  document.getElementById('panel-login').classList.toggle('active',mode==='login');
+  document.getElementById('panel-signup').classList.toggle('active',mode==='signup');
+  document.getElementById('tab-login').classList.toggle('active',mode==='login');
+  document.getElementById('tab-signup').classList.toggle('active',mode==='signup');
 }
 
-/* ─── Auth UI ─── */
-function showEmailForm(){var f=document.getElementById('email-form');f.classList.add('show');document.getElementById('f-prenom').focus();}
-
 function authGoogle(){
-  var names=[{prenom:'Sophie',nom:'Martin',email:'sophie.martin@gmail.com'},{prenom:'Thomas',nom:'Durand',email:'thomas.durand@gmail.com'},{prenom:'Emma',nom:'Bernard',email:'emma.bernard@gmail.com'},{prenom:'Lucas',nom:'Petit',email:'lucas.petit@gmail.com'}];
+  var names=[{prenom:'Sophie',nom:'Martin',email:'sophie.martin@gmail.com'},{prenom:'Thomas',nom:'Durand',email:'thomas.durand@gmail.com'},{prenom:'Emma',nom:'Bernard',email:'emma.bernard@gmail.com'}];
   var n=names[Math.floor(Math.random()*names.length)];
   createSession({prenom:n.prenom,nom:n.nom,email:n.email,provider:'google'});
 }
 
-function authEmail(){
-  var prenom=(document.getElementById('f-prenom').value||'').trim();
-  var nom=(document.getElementById('f-nom').value||'').trim();
-  var email=(document.getElementById('f-email').value||'').trim();
-  var eEl=document.getElementById('f-email'),pEl=document.getElementById('f-prenom');
-  eEl.style.borderColor='';pEl.style.borderColor='';
-  if(!email||email.indexOf('@')<0){eEl.style.borderColor='#EF4444';eEl.focus();return;}
-  if(!prenom){pEl.style.borderColor='#EF4444';pEl.focus();return;}
-  var btn=document.getElementById('btn-submit');btn.classList.add('loading');btn.disabled=true;
-  setTimeout(function(){createSession({prenom:prenom,nom:nom||'',email:email,provider:'email'});},900);
+function authLogin(){
+  var email=document.getElementById('login-email').value.trim();
+  var eEl=document.getElementById('login-email');
+  eEl.classList.remove('err');
+  if(!email||email.indexOf('@')<0){eEl.classList.add('err');eEl.focus();return;}
+  var existing=HK.get('herakl_session');
+  var user=existing&&existing.email===email?existing:{prenom:'Utilisateur',nom:'',email:email,provider:'email'};
+  createSession(user);
+}
+
+function authSignup(){
+  var prenom=document.getElementById('su-prenom').value.trim();
+  var nom=document.getElementById('su-nom').value.trim();
+  var email=document.getElementById('su-email').value.trim();
+  var eEl=document.getElementById('su-email'),pEl=document.getElementById('su-prenom');
+  eEl.classList.remove('err');pEl.classList.remove('err');
+  if(!email||email.indexOf('@')<0){eEl.classList.add('err');eEl.focus();return;}
+  if(!prenom){pEl.classList.add('err');pEl.focus();return;}
+  createSession({prenom:prenom,nom:nom,email:email,provider:'email'});
 }
 
 function createSession(user){
-  var existing=getSession();
-  var session=existing&&existing.email===user.email
+  var existing=HK.get('herakl_session');
+  var isNew=!existing||(existing.email!==user.email);
+  var session=!isNew
     ?Object.assign(existing,{lastLogin:new Date().toISOString()})
     :{id:uid('usr'),prenom:user.prenom,nom:user.nom,email:user.email,provider:user.provider,createdAt:new Date().toISOString(),lastLogin:new Date().toISOString()};
-  saveSession(session);
-  var bien=attachPendingBienToSession(session);
-  /* Après login : accès restricted → proposer vérification */
-  if(bien&&bien.access&&bien.access.level==='restricted'){
-    /* Afficher la modale de vérification */
-    setTimeout(function(){openVerif();},400);
-  } else {
-    window.location.href='herakl-dashboard.html';
+  HK.set('herakl_session',session);
+
+  var pending=HK.get('herakl_pending_bien');
+  if(pending){
+    pending.id=pending.id||uid('bien');
+    pending.userId=session.id;
+    pending.userEmail=session.email;
+    if(!pending.access)pending.access={level:'restricted'};
+    var userBiens=HK.get('herakl_user_biens')||[];
+    var exists=userBiens.some(function(b){return b.id===pending.id;});
+    if(!exists)userBiens.unshift(pending);
+    HK.set('herakl_user_biens',userBiens);
+    HK.set('herakl_bien',pending);
+    HK.del('herakl_pending_bien');
   }
+  redirect(isNew);
 }
-
-/* ════════════ VÉRIFICATION DU BIEN ════════════ */
-var _verifFile = null;
-
-function openVerif(){
-  var m=document.getElementById('modal-verif');
-  if(m){m.style.display='flex';document.body.style.overflow='hidden';}
-}
-function closeVerif(){
-  var m=document.getElementById('modal-verif');
-  if(m){m.style.display='none';document.body.style.overflow='';}
-  /* Aller au dashboard avec accès restricted */
-  window.location.href='herakl-dashboard.html';
-}
-
-function handleVerifFile(files){
-  if(!files||!files.length)return;
-  _verifFile=files[0];
-  var fn=document.getElementById('verif-file-name');
-  if(fn){fn.style.display='block';fn.textContent=_verifFile.name;}
-  _checkVerifReady();
-}
-function handleVerifDrop(e){
-  e.preventDefault();
-  document.getElementById('verif-upload-zone').style.borderColor='#E2E8F0';
-  handleVerifFile(e.dataTransfer.files);
-}
-function _checkVerifReady(){
-  var rel=document.getElementById('verif-relation').value;
-  var jus=document.getElementById('verif-justif').value;
-  var btn=document.getElementById('btn-submit-verif');
-  if(btn)btn.style.opacity=(rel&&jus&&_verifFile)?'1':'0.5';
-  if(btn)btn.disabled=!(rel&&jus&&_verifFile);
-}
-/* Observer les selects */
-document.addEventListener('change',function(e){if(e.target.id==='verif-relation'||e.target.id==='verif-justif')_checkVerifReady();});
-
-function submitVerification(){
-  var rel=document.getElementById('verif-relation').value;
-  var jus=document.getElementById('verif-justif').value;
-  if(!rel||!jus||!_verifFile)return;
-  var statusEl=document.getElementById('verif-status');
-  if(statusEl){statusEl.style.display='block';statusEl.innerHTML='<div style="padding:10px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;font-size:12.5px;color:#D97706;">⏳ Vérification en cours... (simulation)</div>';}
-
-  setTimeout(function(){
-    /* Simulation : vérification approuvée après 1.5s */
-    var b=getCurrentBien();
-    if(b){
-      b.verification={status:'verified',relation:rel,method:jus,documentName:_verifFile?_verifFile.name:null,submittedAt:new Date().toISOString(),reviewedAt:new Date().toISOString()};
-      b.access={level:'full'};
-      setCurrentBien(b);
-      /* Mettre à jour dans userBiens */
-      var ub=HK.get('herakl_user_biens')||[];
-      var idx=ub.findIndex?ub.findIndex(function(x){return x.id===b.id;}):0;
-      if(idx>=0)ub[idx]=b;HK.set('herakl_user_biens',ub);
-    }
-    if(statusEl)statusEl.innerHTML='<div style="padding:10px 12px;background:#DCFCE7;border:1px solid #A7F3D0;border-radius:8px;font-size:12.5px;color:#16A34A;">✓ Lien avec le bien vérifié — accès complet débloqué !</div>';
-    setTimeout(function(){window.location.href='herakl-dashboard.html';},1200);
-  },1500);
-}
-
-
 </script>
-
-<!-- ═══ MODALE VÉRIFICATION DU BIEN ═══ -->
-<div class="modal-overlay" id="modal-verif" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:16px;">
-  <div style="background:#fff;border-radius:16px;width:100%;max-width:500px;box-shadow:0 24px 60px rgba(0,0,0,.2);overflow:hidden;">
-    <div style="padding:20px 24px 14px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
-      <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#0F172A;">Vérifier mon lien avec ce bien</div>
-      <div onclick="closeVerif()" style="width:28px;height:28px;border-radius:7px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </div>
-    </div>
-    <div style="padding:20px 24px;">
-      <p style="font-size:13px;color:#64748B;line-height:1.6;margin-bottom:18px;">La vérification de votre lien avec ce bien est obligatoire pour accéder au dossier complet. Cela protège les données du bien.</p>
-      
-      <div style="margin-bottom:14px;">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">Votre relation avec ce bien</div>
-        <select id="verif-relation" style="width:100%;padding:10px 13px;border:1.5px solid #E2E8F0;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:#0F172A;outline:none;">
-          <option value="">Sélectionner...</option>
-          <option value="proprietaire-occupant">Propriétaire occupant</option>
-          <option value="bailleur">Propriétaire bailleur</option>
-          <option value="co-proprietaire">Co-propriétaire</option>
-          <option value="mandataire">Mandataire</option>
-          <option value="acheteur">Acheteur potentiel</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom:14px;">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">Justificatif</div>
-        <select id="verif-justif" style="width:100%;padding:10px 13px;border:1.5px solid #E2E8F0;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:#0F172A;outline:none;">
-          <option value="">Sélectionner...</option>
-          <option value="taxe-fonciere">Taxe foncière</option>
-          <option value="titre-propriete">Titre de propriété</option>
-          <option value="assurance">Assurance habitation</option>
-          <option value="justif-domicile">Justificatif de domicile</option>
-          <option value="bail">Bail</option>
-        </select>
-      </div>
-
-      <!-- Upload zone -->
-      <div id="verif-upload-zone" style="border:2px dashed #E2E8F0;border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:#F8FAFC;transition:all .14s;" onclick="document.getElementById('verif-file').click()" ondragover="event.preventDefault();this.style.borderColor='#2563EB'" ondragleave="this.style.borderColor='#E2E8F0'" ondrop="handleVerifDrop(event)">
-        <div style="font-size:13px;font-weight:500;color:#64748B;">Glisser le document ou <span style="color:#2563EB;">cliquer pour choisir</span></div>
-        <div style="font-size:11px;color:#94A3B8;margin-top:4px;">PDF, image — max 5 Mo</div>
-      </div>
-      <input type="file" id="verif-file" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="handleVerifFile(this.files)"/>
-      <div id="verif-file-name" style="display:none;margin-top:8px;padding:8px 12px;background:#EFF6FF;border:1px solid #DBEAFE;border-radius:8px;font-size:12.5px;color:#2563EB;"></div>
-
-      <!-- Statut -->
-      <div id="verif-status" style="display:none;margin-top:12px;"></div>
-    </div>
-
-    <div style="padding:14px 24px;border-top:1px solid #E2E8F0;display:flex;gap:10px;justify-content:flex-end;">
-      <button onclick="closeVerif()" style="padding:10px 16px;background:transparent;color:#64748B;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;cursor:pointer;">Plus tard</button>
-      <button id="btn-submit-verif" onclick="submitVerification()" disabled style="display:flex;align-items:center;gap:6px;padding:10px 20px;background:#2563EB;color:#fff;border:none;border-radius:9px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;opacity:.5;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Soumettre
-      </button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
