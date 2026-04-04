@@ -4144,16 +4144,6 @@ function chargerAdresseLive() {
 
 
 /* ── Toggles bâtiment/terrain + réglementation ── */
-function btToggle(key) {
-  var content = document.getElementById('bt-content-' + key);
-  var summary = document.getElementById('bt-summary-' + key);
-  var chevron = document.getElementById('bt-btn-' + key);
-  if (!content) return;
-  var isOpen = !content.classList.contains('collapsed');
-  content.classList.toggle('collapsed', isOpen);
-  if (summary) summary.classList.toggle('show', isOpen);
-  if (chevron) chevron.classList.toggle('open', !isOpen);
-}
 function regToggle() {
   var exp = document.getElementById('reg-expanded');
   var btn = document.getElementById('reg-btn');
@@ -6245,52 +6235,6 @@ function updateDossierState(dm) {
 }
 
 /* ── Générer les insights IA enrichis ── */
-function generateInsights(b) {
-  var container = document.getElementById('insights-list');
-  if (!container || !b) return;
-  var dpe     = (b.energie&&b.energie.dpe)||'E';
-  var surf    = (b.bien&&b.bien.surface)||80;
-  var vb      = (b.contexte&&b.contexte.valeurBasse)||0;
-  var vh      = (b.contexte&&b.contexte.valeurHaute)||0;
-  var marche  = b.marche||{};
-  var risques = b.risques||{};
-  var insights = [];
-
-  /* DPE */
-  if (['E','F','G'].indexOf(dpe)>=0) {
-    insights.push({level:'h', text:'DPE '+dpe+' — ce bien perd de la valeur. Non-louable en 2028 (loi Climat). MaPrimeRénov\' mobilisable dès maintenant.'});
-  } else if (dpe==='D') {
-    insights.push({level:'m', text:'DPE D — amélioration vers C atteignable. Gain estimé +5 à 8% sur la valeur de revente.'});
-  } else {
-    insights.push({level:'l', text:'DPE '+dpe+' — bonne performance. Valorisez cet atout dans votre stratégie de revente ou de location.'});
-  }
-
-  /* Marché */
-  if (marche.tension==='tendu') {
-    insights.push({level:'l', text:'Marché tendu — demande forte. Bon timing pour valoriser ou céder. Prix stables ou en hausse.'});
-  } else if (marche.tension==='detendu') {
-    insights.push({level:'m', text:'Marché détendu — rénovation recommandée avant toute vente pour maximiser la valeur.'});
-  }
-
-  /* Risques */
-  if (risques.inondation) {
-    insights.push({level:'h', text:'Risque d\'inondation identifié — vérifiez l\'assurance habitation et anticipez l\'impact sur la valeur lors d\'une revente.'});
-  }
-
-  /* Valeur */
-  if (vb && vh) {
-    insights.push({level:'l', text:'Fourchette estimée '+fmtK(vb)+' – '+fmtK(vh)+'. Un DPE officiel et des travaux ciblés peuvent dépasser ce plafond.'});
-  }
-
-  /* Année manquante */
-  if (!((b.bien&&b.bien.annee))) {
-    insights.push({level:'m', text:'Année de construction manquante — elle influe sur l\'estimation DPE et les aides disponibles. Complétez votre dossier.'});
-  }
-
-  container.innerHTML = insights.slice(0,4).map(function(ins){
-    return '<div class="insight-item"><div class="insight-dot '+ins.level+'"></div><div class="insight-text">'+ins.text+'</div></div>';
-  }).join('');
-}
 
 /* ── Détecter les données manquantes et afficher les actions ── */
 function renderMissingActions(dm) {
@@ -6593,39 +6537,6 @@ function toggleCheck(el) {
 }
 
 /* ── Injection Risques enrichie ── */
-function injectRisques(risques) {
-  var el = document.getElementById('risques-section');
-  if (!el) return;
-
-  /* Données par défaut si absentes */
-  var r = risques || {};
-  var items = [
-    { label:'Inondation',     val:r.inondation !== undefined ? (r.inondation ? 'Oui' : 'Non exposé') : '—', ok: r.inondation !== undefined ? !r.inondation : null },
-    { label:'Sismicité',      val:r.sismique || '—',   ok: r.sismique ? (r.sismique==='très faible'||r.sismique==='faible') : null },
-    { label:'Retrait-argile', val:r.argile   || '—',   ok: r.argile   ? r.argile==='faible'   : null },
-    { label:'Radon',          val:r.radon    || '—',   ok: r.radon    ? r.radon==='faible'    : null }
-  ];
-  if (r.icpe) items.push({ label:'Risques industriels', val:'À proximité', ok:false });
-
-  var niveaux = {'non exposé':0.08,'très faible':0.12,'faible':0.2,'modéré':0.55,'moyen':0.55,'fort':0.85,'élevé':0.85,'oui':0.9};
-
-  el.className = 'rq-grid';
-  el.innerHTML = items.map(function(it, i){
-    var hasData = it.ok !== null;
-    var pct = hasData ? Math.round((niveaux[(it.val||'').toLowerCase()] || (it.ok ? 0.1 : 0.5)) * 100) : 0;
-    var color = hasData ? (it.ok ? '#22C55E' : '#F59E0B') : '#E2E8F0';
-    var textColor = hasData ? (it.ok ? '#16A34A' : '#D97706') : '#94A3B8';
-    var border = i >= 2 ? 'border-top:0.5px solid var(--border);' : '';
-    var borderRight = i % 2 === 0 ? 'border-right:0.5px solid var(--border);' : '';
-    return '<div style="padding:16px 22px;'+border+borderRight+'">'
-      +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:.09em;margin-bottom:7px;">'+it.label+'</div>'
-      +'<div style="font-family:\'Sora\',sans-serif;font-size:15px;font-weight:700;color:'+textColor+';letter-spacing:-.02em;margin-bottom:9px;">'+it.val+'</div>'
-      +'<div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">'
-        +(pct > 0 ? '<div style="height:4px;border-radius:2px;background:'+color+';width:'+pct+'%;"></div>' : '')
-      +'</div>'
-      +'</div>';
-  }).join('');
-}
 
 /* ── Injection Marché enrichie ── */
 
@@ -7432,121 +7343,14 @@ var _mapZoom     = 16;
 
 
 
-function renderMap(b) {
-  if (!b) return;
 
-  var addr  = b.adresse || {};
-  var bien  = b.bien    || {};
-  var lat   = addr.lat  || null;
-  var lon   = addr.lon  || null;
-
-  /* Adresse pill */
-  var addrText = '';
-  var _full = addr.full || '';
-  /* Extraire rue et ville depuis full — supporte "Rue, CP Ville" et "Rue CP Ville" */
-  var _mFull = _full.match(/^(.+?),?\s*(\d{5})\s+(.+)$/);
-  var _st = _mFull ? _mFull[1].trim() : (addr.street ? addr.street.replace(/,?\s*\d{5}.*$/,'').trim() : '');
-  var _ct = _mFull ? _mFull[3].trim() : (addr.city || '');
-  addrText = _st + (_ct ? ', ' + _ct : '');
-  var pill = document.getElementById('map-addr-text');
-  if (pill) pill.textContent = addrText || 'Adresse non renseignée';
-
-  /* Chips */
-  var TL = { maison:'Maison', appartement:'Appartement', immeuble:'Immeuble', terrain:'Terrain' };
-  var typeVal  = TL[bien.type||b.type] || bien.type || b.type;
-  var surfVal  = (bien.surface||b.surface) ? (bien.surface||b.surface)+' m²' : null;
-  var roomsVal = (bien.pieces||b.pieces) ? (bien.pieces||b.pieces)+' pièces' : null;
-
-  function showChip(id, valId, val) {
-    var el = document.getElementById(id);
-    var vl = document.getElementById(valId);
-    if (el) el.style.display = val ? '' : 'none';
-    if (vl) vl.textContent = val || '';
-  }
-  showChip('map-chip-type',  'map-chip-type-val',  typeVal);
-  showChip('map-chip-rooms', 'map-chip-rooms-val', roomsVal);
-  showChip('map-chip-surf',  'map-chip-surf-val',  surfVal);
-
-
-  /* Init carte si Leaflet chargé */
-  if (typeof L !== 'undefined') {
-    initMap(lat, lon, addrText);
-  } else {
-    /* Leaflet pas encore chargé — attendre */
-    var script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-    script.onload = function() { initMap(lat, lon, addrText); };
-    document.head.appendChild(script);
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
-    document.head.appendChild(link);
-  }
-}
 
 /* ════ MARCHÉ — toggle + chart ════ */
 var _marcheOpen = false;
 
-function marcheToggle() {
-  _marcheOpen = !_marcheOpen;
-  var exp = document.getElementById('marche-expanded');
-  var btn = document.getElementById('marche-btn');
-  if (exp) exp.classList.toggle('show', _marcheOpen);
-  if (btn) btn.classList.toggle('open', _marcheOpen);
-  if (_marcheOpen && !_marcheChartBuilt) {
-    setTimeout(_marcheBuildChart, 50);
-  }
-}
 
-function _marcheBuildChart() {
-  var canvas = document.getElementById('marche-chart');
-  if (!canvas || typeof Chart === 'undefined') return;
-  _marcheChartBuilt = true;
-  var d = _marcheHistoData || _marcheDefaultHisto(3200);
-  var dark = matchMedia('(prefers-color-scheme: dark)').matches;
-  var gc = dark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.04)';
-  var tc = dark ? '#888780' : '#888780';
-  new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels: d.labels,
-      datasets: [
-        { data:d.hi, borderColor:'transparent', backgroundColor:dark?'rgba(99,153,34,.15)':'rgba(99,153,34,.09)', fill:'+1', pointRadius:0, tension:.4 },
-        { data:d.vals, borderColor:'#639922', backgroundColor:'transparent', borderWidth:2, pointRadius:0, pointHoverRadius:5, pointHoverBackgroundColor:'#639922', tension:.4, fill:false },
-        { data:d.lo, borderColor:'transparent', backgroundColor:dark?'rgba(99,153,34,.15)':'rgba(99,153,34,.09)', fill:'-1', pointRadius:0, tension:.4 }
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:dark?'#1e1e1e':'#fff',
-          borderColor:dark?'rgba(255,255,255,.12)':'rgba(0,0,0,.1)',
-          borderWidth:1, titleColor:tc, bodyColor:dark?'#e2e8f0':'#0F172A', padding:10,
-          callbacks:{
-            title:function(i){return i[0].label;},
-            label:function(i){return i.datasetIndex===1?' '+Math.round(i.raw).toLocaleString('fr-FR')+' €/m²':null;}
-          }
-        }
-      },
-      scales:{
-        x:{grid:{display:false},ticks:{color:tc,font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:6},border:{display:false}},
-        y:{grid:{color:gc,drawTicks:false},ticks:{color:tc,font:{size:9},callback:function(v){return Math.round(v).toLocaleString('fr-FR')+'€';},padding:6},border:{display:false},suggestedMin:1800}
-      }
-    }
-  });
-}
 
 /* Charger Chart.js si pas encore chargé */
-function _ensureChartJS(cb) {
-  if (typeof Chart !== 'undefined') { cb(); return; }
-  var s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
-  s.onload = cb;
-  document.head.appendChild(s);
-}
 var _origMarcheToggle = marcheToggle;
 marcheToggle = function(){
   _origMarcheToggle();
@@ -7556,33 +7360,6 @@ marcheToggle = function(){
 };
 
 /* ── Menu + Ajouter ── */
-function toggleAddMenu(){
-  var m=document.getElementById('add-menu');
-  if(!m)return;
-  m.classList.toggle('open');
-  if(m.classList.contains('open')){
-    setTimeout(function(){
-      document.addEventListener('click',closeAddMenuOutside,{once:true});
-    },0);
-  }
-}
-function closeAddMenuOutside(e){
-  var wrap=document.querySelector('.add-wrap');
-  if(wrap&&!wrap.contains(e.target)){
-    var m=document.getElementById('add-menu');
-    if(m)m.classList.remove('open');
-  }
-}
-function quickAddDoc(){
-  var m=document.getElementById('add-menu');
-  if(m)m.classList.remove('open');
-  openModal('modal-document');
-}
-function quickAddEvent(){
-  var m=document.getElementById('add-menu');
-  if(m)m.classList.remove('open');
-  openModal('modal-historique');
-}
 
 /* ── Cloche notifications ── */
 function toggleBell(){
