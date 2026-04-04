@@ -4370,6 +4370,7 @@ function animateScore(pct){
     var cpIdx = adresse.search(/\d{5}/);
     street = cpIdx > 0 ? adresse.slice(0, cpIdx).trim() : adresse.split(',')[0].trim();
   }
+  var shortStreet = street.replace(/,?\s*\d{5}.*$/,'').trim();
 
   /* City — extraire après le CP */
   var city = addr.city || '';
@@ -7350,14 +7351,7 @@ var _marcheOpen = false;
 
 
 
-/* Charger Chart.js si pas encore chargé */
-var _origMarcheToggle = marcheToggle;
-marcheToggle = function(){
-  _origMarcheToggle();
-  if (_marcheOpen && typeof Chart === 'undefined') {
-    _ensureChartJS(function(){ if(!_marcheChartBuilt) _marcheBuildChart(); });
-  }
-};
+/* Chart.js chargé via _ensureChartJS dans marcheToggle */
 
 /* ── Menu + Ajouter ── */
 
