@@ -4944,26 +4944,58 @@ function _drawParcelleOnMap(feature) {
 
 /* ── 5. GPU — Zone PLU ── */
 function fetchGPU(lon, lat) {
-  /* API Géoportail Urbanisme — WFS CORS OK depuis geopf.fr */
-  var delta = 0.0008;
-  var bbox  = (lat-delta)+','+(lon-delta)+','+(lat+delta)+','+(lon+delta);
+  /* API Géoportail Urbanisme — zone PLU réelle */
+  var delta = 0.001;
+  var bbox  = (lon-delta)+','+(lat-delta)+','+(lon+delta)+','+(lat+delta);
   var url   = 'https://data.geopf.fr/wfs/ows'
     +'?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature'
-    +'&typeName=BDTOPO_V3:zone_d_activite_ou_d_interet'  /* Zone principale */
-    +'&OUTPUTFORMAT=application/json&CRS=EPSG:4326&BBOX='+bbox;
+    +'&typeNames=GPU:ZONE_URBA'
+    +'&OUTPUTFORMAT=application/json&SRSNAME=EPSG:4326'
+    +'&BBOX='+bbox+',EPSG:4326&count=5';
 
-  /* URL alternative GPU */
-  var url2 = 'https://wxs.ign.fr/essentiels/geoportail/wfs'
-    +'?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature'
-    +'&typeNames=ADMINEXPRESS-COG-CARTO-2023:commune'
-    +'&OUTPUTFORMAT=application/json&BBOX='+bbox+',EPSG:4326&count=1';
-
-  return proxyFetch(url, 'gpu_'+lat+'_'+lon)
+  return fetch(url, {mode:'cors'})
+    .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data) {
       var f = data && (data.features||[])[0];
       if (!f) return null;
       var p = f.properties||{};
-      return { zonePLU:p.nature||p.libelle||p.typezone||null, libelle:p.toponyme||p.libelle||null, source:'gpu', official:true };
+      return {
+        zonePLU:    p.libelle||p.typezone||p.libelle_long||null,
+        typezone:   p.typezone||null,
+        libelle:    p.libelle_long||p.libelle||null,
+        hauteurMax: p.hauteur_max||null,
+        empriseMax: p.emprise_au_sol_max||null,
+        source:     'gpu',
+        official:   true
+      };
+    }).catch(function(){ return null; });
+}
+
+function fetchBDTopo(lat, lon) {
+  /* IGN BDTopo — caractéristiques du bâtiment */
+  var delta = 0.0005;
+  var bbox  = (lon-delta)+','+(lat-delta)+','+(lon+delta)+','+(lat+delta);
+  var url   = 'https://data.geopf.fr/wfs/ows'
+    +'?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature'
+    +'&typeNames=BDTOPO_V3:batiment'
+    +'&OUTPUTFORMAT=application/json&SRSNAME=EPSG:4326'
+    +'&BBOX='+bbox+',EPSG:4326&count=3';
+
+  return fetch(url, {mode:'cors'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data) {
+      var f = data && (data.features||[])[0];
+      if (!f) return null;
+      var p = f.properties||{};
+      return {
+        type:          p.usage1||p.nature||null,
+        etages:        p.nombre_d_etages_sur_rez_de_chaussee||p.nb_etages||null,
+        annee:         p.date_creation ? new Date(p.date_creation).getFullYear() : null,
+        surfaceSol:    p.superficie_au_sol ? Math.round(p.superficie_au_sol) : null,
+        hauteurFacade: p.hauteur ? Math.round(p.hauteur*10)/10 : null,
+        source:        'bdtopo',
+        official:      true
+      };
     }).catch(function(){ return null; });
 }
 
@@ -5051,11 +5083,28 @@ function fetchAllApis(b) {
       if (!b.urbanisme) b.urbanisme = {};
       b.urbanisme.zonePLU = plu.zonePLU;
       b.urbanisme.libelle = plu.libelle;
+      b.urbanisme.hauteurMax = plu.hauteurMax;
+      b.urbanisme.empriseMax = plu.empriseMax;
       b.urbanisme.source  = 'gpu';
       updateBien(b);
       renderReglementation(b);
     })
     .catch(function(e) { console.warn('[HERAKL] GPU:', e); });
+
+  /* 6. BDTopo — caractéristiques bâtiment */
+  fetchBDTopo(lat, lon)
+    .then(function(bat) {
+      if (!bat) return;
+      if (!b.bien) b.bien = {};
+      if (bat.type         && !b.bien.type)          b.bien.type          = bat.type;
+      if (bat.etages       && !b.bien.etages)         b.bien.etages        = bat.etages;
+      if (bat.annee        && !b.bien.annee)          b.bien.annee         = bat.annee;
+      if (bat.surfaceSol)                             b.bien.surfaceSol    = bat.surfaceSol;
+      if (bat.hauteurFacade)                          b.bien.hauteurFacade = bat.hauteurFacade;
+      updateBien(b);
+      renderBien(b);
+    })
+    .catch(function(e) { console.warn('[HERAKL] BDTopo:', e); });
 }
 
 /* ── Helpers ── */
